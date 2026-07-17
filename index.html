@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDECO · Pharma Prompt & Ảnh AI — GPT-Image-2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --red:#ee3a23; --red-dark:#c42a16; --red-soft:#fdeae7;
+  --em:#059669; --em-dark:#047857; --em-soft:#ecfdf5; --em-line:#a7f3d0;
+  --indigo:#4f46e5; --indigo-dark:#4338ca; --indigo-soft:#eef2ff;
+  --ink:#0f172a; --slate8:#1e293b; --slate7:#334155;
+  --panel:#f1f5f9; --card:#ffffff; --line:#e2e8f0; --line2:#cbd5e1;
+  --txt:#1e293b; --muted:#64748b; --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',system-ui,sans-serif;background:var(--panel);color:var(--txt);min-height:100vh}
+.mono{font-family:'JetBrains Mono',monospace}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:13.5px;width:100%;padding:9px 11px;border:1px solid var(--line2);border-radius:9px;background:#fff;color:var(--txt);outline:none;transition:border .15s, box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--em);box-shadow:0 0 0 3px rgba(5,150,105,.14)}
+textarea{resize:none;line-height:1.5}
+.lbl{display:block;font-size:12px;font-weight:600;color:var(--slate7);margin:0 0 4px}
+.lbl.b{font-weight:800}
+.hint{font-size:11.5px;color:var(--muted);line-height:1.45}
+.custom-scroll::-webkit-scrollbar{width:9px;height:11px}
+.custom-scroll::-webkit-scrollbar-track{background:#eef1f5;border-radius:8px}
+.custom-scroll::-webkit-scrollbar-thumb{background:#b7c1cd;border-radius:8px;border:2px solid #eef1f5}
+.custom-scroll::-webkit-scrollbar-thumb:hover{background:#94a3b8}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;animation:spin 1s linear infinite}
+@keyframes pulseA{0%,100%{opacity:1}50%{opacity:.45}}
+.pulse{animation:pulseA 1.6s ease-in-out infinite}
+@keyframes bounce-x{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+.bounce-x{display:inline-block;animation:bounce-x 1s infinite}
+@keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel{background:linear-gradient(90deg,#e8edf3 25%,#f5f8fb 50%,#e8edf3 75%);background-size:200% 100%;animation:skel 1.3s infinite;border-radius:6px}
+
+/* ===== Header ===== */
+header.top{background:#fff;border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:60}
+.brand{display:flex;align-items:center;gap:11px}
+.brand .logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#4338ca);display:flex;align-items:center;justify-content:center;color:#fff;font-size:21px;box-shadow:0 4px 14px rgba(79,70,229,.35)}
+.brand h1{font-size:19px;font-weight:900;letter-spacing:-.02em;color:var(--ink)}
+.brand h1 span{color:var(--red)}
+.brand .sub{font-size:11.5px;color:var(--muted);font-weight:500}
+.topbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tbtn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:13px;color:var(--slate7);transition:all .15s;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.tbtn:hover{background:var(--panel)}
+.tbtn:active{transform:scale(.96)}
+.tbtn.indigo{color:var(--indigo);border-color:#c7d2fe}
+.tbtn.indigo:hover{background:var(--indigo-soft)}
+.tbtn.green{color:var(--em-dark);border-color:var(--em-line)}
+.tbtn.green:hover{background:var(--em-soft)}
+.tbtn.solid-indigo{background:var(--indigo);border-color:var(--indigo);color:#fff;box-shadow:0 6px 16px rgba(79,70,229,.3)}
+.tbtn.solid-indigo:hover{background:var(--indigo-dark)}
+.tbtn:disabled{opacity:.5;filter:grayscale(.6);cursor:not-allowed}
+.credit{display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:12.5px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+.dot.bad{background:var(--bad)}
+
+/* ===== Mode tabs ===== */
+.modes{max-width:1360px;margin:16px auto 0;padding:0 16px;display:flex;gap:8px}
+.mtab{padding:11px 22px;border-radius:12px 12px 0 0;border:1px solid var(--line);border-bottom:none;background:#e7ecf2;font-weight:800;font-size:14px;color:var(--muted)}
+.mtab.on{background:#fff;color:var(--indigo)}
+.wrap{max-width:1360px;margin:0 auto 60px;padding:0 16px}
+.sheet{background:transparent}
+.cols{display:grid;grid-template-columns:7fr 5fr;gap:20px;align-items:start}
+@media(max-width:1000px){.cols{grid-template-columns:1fr}}
+
+/* ===== Product form card (như bản gốc) ===== */
+.pcard{background:#fff;border-radius:0 14px 14px 14px;box-shadow:0 10px 24px rgba(15,23,42,.08);border:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.ptabs{display:flex;border-bottom:1px solid var(--line);background:#f8fafc;overflow-x:auto;white-space:nowrap}
+.ptab{flex:1;min-width:95px;padding:12px 8px;font-size:13.5px;font-weight:600;color:var(--muted);background:none;border:none;border-right:1px solid var(--line);border-top:2.5px solid transparent;transition:all .15s}
+.ptab:last-child{border-right:none}
+.ptab:hover{background:#eef2f6}
+.ptab.on{background:#fff;color:var(--em-dark);border-top-color:var(--em);box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.pbody{padding:22px 24px;flex:1}
+.phead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.phead h2{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.aspectbox{background:var(--panel);padding:4px;border-radius:10px;display:flex;border:1px solid var(--line)}
+.aspectbox button{padding:5px 12px;font-size:11.5px;font-weight:800;border-radius:8px;border:none;background:none;color:#94a3b8;display:flex;align-items:center;gap:4px}
+.aspectbox button.on{background:#fff;color:var(--em);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.g2{grid-template-columns:1fr}}
+
+/* upload zone */
+.upcard{border:2px dashed var(--line2);border-radius:12px;padding:14px;background:#f8fafc;transition:all .15s;position:relative}
+.upcard:hover{background:#fff;border-color:var(--em)}
+.uphead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.uphead .t{font-size:13px;font-weight:600;color:var(--slate7)}
+.linkbtn{background:none;border:none;font-size:11.5px;font-weight:800;display:inline-flex;align-items:center;gap:4px;padding:0}
+.linkbtn:hover{text-decoration:underline}
+.linkbtn.blue{color:#2563eb}.linkbtn.red{color:#ef4444}
+.updrop{cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 0;color:#94a3b8;font-size:13px}
+.updrop .ic{font-size:30px;opacity:.55;margin-bottom:6px}
+.urlrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.urlrow input{flex:1;min-width:180px;font-size:12px;padding:8px 10px}
+.mbtn{font-size:11.5px;font-weight:800;color:#fff;border:none;border-radius:7px;padding:8px 11px;display:inline-flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
+.mbtn:disabled{opacity:.5;cursor:not-allowed}
+.mbtn.slate{background:#475569}.mbtn.slate:hover{background:#334155}
+.mbtn.indigo{background:var(--indigo)}.mbtn.indigo:hover{background:var(--indigo-dark)}
+.mbtn.purple{background:#9333ea}.mbtn.purple:hover{background:#7e22ce}
+.mbtn.gray{background:#e2e8f0;color:#475569}.mbtn.gray:hover{background:#cbd5e1}
+.imgrow{display:flex;gap:14px;align-items:center}
+.thumbwrap{width:96px;height:96px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#fff;position:relative;flex-shrink:0}
+.thumbwrap img{width:100%;height:100%;object-fit:contain}
+.thumbwrap .busy{position:absolute;inset:0;background:rgba(255,255,255,.65);display:flex;align-items:center;justify-content:center;z-index:5}
+
+/* fields với icon */
+.field{position:relative}
+.field .ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.5;pointer-events:none}
+.field input{padding-left:34px}
+.namewrap{position:relative;z-index:30}
+.namewrap input{font-weight:800;font-size:17px;padding:11px 12px 11px 38px}
+.suggest{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 16px 40px rgba(0,0,0,.15);margin-top:4px;max-height:240px;overflow:auto;z-index:50;display:none}
+.suggest.show{display:block}
+.suggest li{list-style:none;padding:11px 15px;font-size:13px;cursor:pointer;border-bottom:1px solid #f1f5f9;font-weight:700;color:var(--em-dark)}
+.suggest li:last-child{border-bottom:none}
+.suggest li:hover{background:var(--em-soft)}
+.etc{display:flex;align-items:center;gap:8px;background:var(--panel);padding:5px 12px;border-radius:99px;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.etc .txt{font-size:10px;font-weight:800;text-transform:uppercase;color:var(--muted)}
+.etc.on .txt{color:var(--bad)}
+.sw{width:40px;height:20px;border-radius:99px;background:#cbd5e1;border:none;position:relative;transition:background .3s;flex-shrink:0}
+.sw::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .3s}
+.sw.on{background:var(--bad)}
+.sw.on::after{left:22px}
+.ideco-input{border:2px solid #34d399 !important;background:var(--em-soft) !important;font-weight:900;color:#064e3b;box-shadow:0 3px 8px rgba(5,150,105,.15)}
+.cp-badge{font-size:9.5px;background:#d1fae5;color:var(--em-dark);font-weight:900;padding:2px 7px;border-radius:4px}
+.tplchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.tpl{padding:7px 13px;background:var(--panel);border:1px solid var(--line);border-radius:99px;font-size:12px;font-weight:700;color:var(--slate7);transition:all .15s}
+.tpl:hover{background:var(--em-soft);border-color:var(--em-line);color:var(--em-dark)}
+.pfoot{padding:18px 24px;border-top:1px solid var(--line);background:#f8fafc}
+.btn-go{width:100%;padding:15px;border:none;border-radius:13px;background:linear-gradient(90deg,#2563eb,#4338ca);color:#fff;font-size:14.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;box-shadow:0 8px 22px rgba(67,56,202,.35);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-go:hover{box-shadow:0 10px 28px rgba(67,56,202,.45)}
+.btn-go:active{transform:scale(.97)}
+.btn-go:disabled{background:#94a3b8;cursor:not-allowed;box-shadow:none}
+.btn-go.red{background:linear-gradient(90deg,var(--red),var(--red-dark));box-shadow:0 8px 22px rgba(238,58,35,.35)}
+
+/* ===== Results (bên phải) ===== */
+.rescol{display:flex;flex-direction:column;gap:0}
+.reshead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:sticky;top:74px;background:var(--panel);padding:8px 0;z-index:20}
+.reshead h2{font-size:16.5px;font-weight:800;display:flex;align-items:center;gap:7px}
+.ready{font-size:11px;font-weight:600;color:var(--muted);background:#e8edf3;border:1px solid var(--line);padding:4px 9px;border-radius:6px}
+.res-empty{background:#fff;border:2px dashed var(--line2);border-radius:14px;padding:48px 26px;text-align:center;color:#94a3b8}
+.res-empty .circ{width:80px;height:80px;border-radius:50%;background:var(--indigo-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:34px}
+.res-empty .t1{font-size:16px;font-weight:600;color:var(--slate7)}
+.res-empty .t2{font-size:13px;max-width:300px;margin:8px auto 0;line-height:1.5}
+.ritem{background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden;box-shadow:0 2px 8px rgba(15,23,42,.05);margin-bottom:16px;transition:box-shadow .2s}
+.ritem:hover{box-shadow:0 6px 18px rgba(15,23,42,.1)}
+.ritem.err{border-color:#fecaca;background:#fef2f2}
+.rithead{background:#f8fafc;padding:11px 15px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.rithead .lft{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;color:var(--slate7)}
+.numball{width:24px;height:24px;border-radius:50%;background:var(--indigo-soft);color:var(--indigo);display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:800}
+.cbtn{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;font-size:11.5px;font-weight:600;border-radius:7px;border:1px solid var(--line);background:#fff;color:var(--slate7);transition:all .15s}
+.cbtn:hover{background:#f8fafc;color:var(--indigo)}
+.cbtn.copied{color:#15803d;background:#f0fdf4;border-color:#bbf7d0}
+.cbtn.red{color:var(--red);border-color:#f6c3ba}
+.cbtn.red:hover{background:var(--red-soft)}
+.cbtn:disabled{opacity:.5;cursor:not-allowed}
+.term{background:#0f172a;padding:14px 16px;overflow-x:auto}
+.term textarea{background:transparent;border:none;box-shadow:none;color:#c7d2fe;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.65;width:100%;min-height:150px;resize:vertical;padding:0}
+.term textarea:focus{box-shadow:none}
+.imgtools{padding:11px 15px;border-top:1px solid var(--line);background:#fbfcfe;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.imgtools select{width:auto;padding:6px 9px;font-size:12px}
+.prog{height:7px;border-radius:99px;background:#e8edf3;overflow:hidden;margin:0 15px 4px;display:none}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),#ff7a5c);transition:width .5s}
+.prog.show{display:block}
+.pstate{font-size:11px;color:var(--muted);padding:0 15px 10px;display:none}
+.pstate.show{display:block}
+.rimg{margin:0 15px 14px;border-radius:11px;overflow:hidden;border:1px solid var(--line);background:#0f172a;text-align:center}
+.rimg img{max-width:100%;max-height:440px;cursor:zoom-in;display:block;margin:0 auto}
+.errbox{padding:14px 16px;display:flex;gap:10px;align-items:flex-start}
+.errbox .em{font-size:18px}
+.errbox .tt{font-weight:700;color:#b91c1c;font-size:13.5px}
+.errbox .tx{font-size:12.5px;color:#dc2626;margin-top:4px;white-space:pre-wrap;word-break:break-word}
+.skelcard{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px;margin-bottom:16px}
+
+/* ===== Free mode ===== */
+.freegrid{display:grid;grid-template-columns:430px 1fr;gap:20px;background:#fff;border:1px solid var(--line);border-radius:0 14px 14px 14px;padding:20px}
+@media(max-width:1000px){.freegrid{grid-template-columns:1fr}}
+.block{margin-bottom:16px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1;min-width:80px;padding:9px 6px;border-radius:9px;border:1.5px solid var(--line2);background:#fff;font-size:12.5px;font-weight:700;color:var(--muted)}
+.seg button.on{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.chip{padding:6px 12px;border-radius:99px;border:1px solid var(--line2);background:#fff;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+.chip:hover,.chip.on{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+.refthumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.refthumbs .th{width:64px;height:64px;border-radius:9px;border:1px solid var(--line);position:relative;overflow:hidden;background:#fff}
+.refthumbs img{width:100%;height:100%;object-fit:cover}
+.refthumbs .x{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:none;font-size:11px;line-height:1}
+.sbtn{padding:7px 12px;border-radius:8px;border:1px solid var(--line2);background:#fff;font-size:12px;font-weight:700;color:var(--slate7);transition:all .15s}
+.sbtn:hover{background:var(--panel)}
+
+/* ===== Gallery ===== */
+.galhead{display:flex;align-items:center;justify-content:space-between;margin:28px 0 12px}
+.galhead h2{font-size:16px;font-weight:800}
+.cnt{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:13px}
+.gcard{background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(15,23,42,.05)}
+.gcard img{width:100%;aspect-ratio:1;object-fit:cover;cursor:zoom-in;background:#eef1f5}
+.gcard .meta{padding:9px 11px 4px;flex:1}
+.gcard .p{font-size:11.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gcard .t{font-size:10.5px;color:var(--muted);margin-top:4px}
+.gcard .acts{display:flex;gap:6px;padding:9px 11px 11px}
+.gcard .acts button{flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:11.5px;font-weight:700}
+.gcard .acts button:hover{background:var(--panel)}
+.empty{text-align:center;color:#94a3b8;padding:50px 20px;border:2px dashed var(--line2);border-radius:14px;background:#fff}
+.empty .big{font-size:38px;margin-bottom:8px}
+
+/* ============ MODALS ============ */
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:100;display:none;align-items:center;justify-content:center;padding:6px}
+@media(min-width:640px){.mask{padding:16px}}
+.mask.show{display:flex}
+.modal{background:#fff;border-radius:14px;width:100%;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35);transition:all .3s}
+.modal.excel-s1{max-width:900px;max-height:90vh}
+.modal.excel-s2{max-width:98vw;height:95vh}
+.modal.hist{max-width:900px;max-height:90vh}
+.mhead{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--line);background:#f8fafc;flex-shrink:0}
+.mhead .mtitle{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:800;color:var(--ink)}
+.mhead .icbox{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.mhead .icbox.green{background:#d1fae5;color:var(--em-dark)}
+.mhead .icbox.indigo{background:var(--indigo-soft);color:var(--indigo)}
+.mhead .rgt{display:flex;align-items:center;gap:8px}
+.xbtn{border:none;background:none;color:#94a3b8;width:36px;height:36px;border-radius:50%;font-size:17px}
+.xbtn:hover{background:#eef1f5;color:var(--slate7)}
+.reloadbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;font-size:11.5px;font-weight:800;color:var(--muted);border:1px solid var(--line);border-radius:9px;background:#fff}
+.reloadbtn:hover{color:var(--indigo);background:var(--indigo-soft)}
+.mbody{flex:1;overflow-y:auto;padding:16px 22px}
+.mfoot{padding:14px 22px;border-top:1px solid var(--line);background:#fff;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;gap:10px;flex-wrap:wrap}
+.mfoot .lft,.mfoot .rgt{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.selbadge{display:inline-flex;align-items:center;gap:6px;background:var(--em);color:#fff;padding:6px 15px;border-radius:99px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;box-shadow:0 3px 8px rgba(5,150,105,.3)}
+.clearbtn{display:inline-flex;align-items:center;gap:6px;color:var(--muted);border:1px solid var(--line);background:#fff;padding:6px 12px;border-radius:9px;font-size:11.5px;font-weight:800}
+.clearbtn:hover{color:var(--bad);background:#fef2f2}
+
+/* Excel step 1 */
+.dropzone{height:100%;min-height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;border:2px dashed var(--line2);border-radius:14px;background:#f8fafc;cursor:pointer;transition:background .15s;text-align:center}
+.dropzone:hover{background:#eef2f6}
+.dropzone .ic{font-size:56px;color:#cbd5e1;margin-bottom:14px}
+.dropzone .t1{font-size:19px;font-weight:800;color:var(--slate7)}
+.dropzone .t2{font-size:13px;color:#94a3b8;margin-top:8px}
+
+/* Excel step 2 — mapping */
+.mapcard{background:#f8fafc;border:2px solid #d1fae5;border-radius:13px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+.maphead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.maphead h4{font-size:12.5px;font-weight:900;color:#065f46;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:6px}
+.savecfg{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:9px;font-size:11.5px;font-weight:800;border:1px solid #c7d2fe;color:var(--indigo);background:#fff;transition:all .2s}
+.savecfg:hover{background:var(--indigo-soft)}
+.savecfg.saved{background:#16a34a;color:#fff;border-color:#15803d}
+.mapgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.mapgrid .mf label{font-size:10px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:-.01em;display:flex;justify-content:space-between;margin-bottom:5px}
+.mapgrid .mf label .ok{color:var(--em)}
+.mapgrid .mf select{font-size:12px;font-weight:700;padding:8px 9px}
+.mapgrid .mf select.mapped{border-color:#34d399;background:#f0fdfa;color:#065f46}
+.mapnote{font-size:10px;color:#94a3b8;font-style:italic;margin-top:12px}
+
+/* Excel step 2 — table */
+.pickhead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.pickhead h4{font-size:12.5px;font-weight:900;color:var(--slate7);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:6px}
+.searchbox{position:relative;width:100%;max-width:330px}
+.searchbox input{padding-left:36px;border-width:2px;font-size:13px}
+.searchbox .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;color:#94a3b8}
+.tablecard{border:1px solid var(--line2);border-radius:13px;box-shadow:0 8px 22px rgba(15,23,42,.1);background:#fff;overflow:hidden;display:flex;flex-direction:column}
+.tscroll{overflow:auto;width:100%;max-height:58vh;height:58vh}
+table.xt{width:100%;border-collapse:collapse;font-size:13px;text-align:left;min-width:max-content}
+table.xt thead th{position:sticky;top:0;z-index:10;background:var(--slate8);color:#fff;font-weight:700;text-transform:uppercase;font-size:10px;letter-spacing:.04em;padding:11px 14px;border-right:1px solid #334155;white-space:nowrap;box-shadow:0 2px 4px rgba(0,0,0,.15)}
+table.xt thead th.mapped{background:#065f46;color:#a7f3d0}
+table.xt thead th.stt{left:0;z-index:20;width:56px;text-align:center}
+table.xt thead th.pick{left:56px;z-index:20;width:56px;text-align:center}
+table.xt tbody td{padding:10px 14px;border-right:1px solid #f1f5f9;border-bottom:1px solid #f1f5f9;white-space:nowrap;max-width:300px;overflow:hidden;text-overflow:ellipsis;color:#475569;background:#fff}
+table.xt tbody tr{cursor:pointer;transition:background .1s}
+table.xt tbody tr:hover td{background:var(--indigo-soft)}
+table.xt tbody tr.sel td{background:#ecfdf5}
+table.xt tbody td.stt{position:sticky;left:0;z-index:5;text-align:center;color:#94a3b8;font-family:'JetBrains Mono',monospace;font-size:11px}
+table.xt tbody td.pick{position:sticky;left:56px;z-index:5;text-align:center}
+table.xt tbody td.namecol{font-weight:700;color:var(--ink)}
+table.xt tbody td.calc{font-weight:800;color:var(--em-dark);font-family:'JetBrains Mono',monospace;font-size:11.5px;text-align:right;background:#f8fafc}
+table.xt input[type=checkbox]{width:19px;height:19px;accent-color:var(--em);cursor:pointer}
+.dcin{width:76px;padding:5px 6px;text-align:center;border:2px solid var(--line);border-radius:6px;font-weight:800;font-size:12px}
+.dcin:focus{border-color:var(--em)}
+.scrolltip{background:#f1f5f9;padding:8px 16px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);font-weight:800;display:flex;align-items:center;justify-content:space-between}
+.scrolltip .arrow{color:var(--em)}
+.noresult{padding:48px;text-align:center;color:#94a3b8;font-style:italic}
+
+/* History modal */
+.hcard{background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden;box-shadow:0 2px 8px rgba(15,23,42,.05);margin-bottom:14px}
+.hcard:hover{box-shadow:0 6px 16px rgba(15,23,42,.1)}
+.hchead{background:#f8fafc;padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.hchead h4{font-weight:800;font-size:14px}
+.hchead .dt{font-size:11px;color:var(--muted);margin-top:2px}
+.hbtns{display:flex;gap:8px;flex-wrap:wrap}
+.hterm{background:#0f172a;padding:14px 16px;overflow-x:auto}
+.hterm pre{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#c7d2fe;white-space:pre-wrap;line-height:1.65}
+
+/* lightbox + toast */
+.lb{position:fixed;inset:0;background:rgba(6,8,14,.93);z-index:200;display:none;align-items:center;justify-content:center;cursor:zoom-out;padding:20px}
+.lb.show{display:flex}
+.lb img{max-width:96vw;max-height:92vh;border-radius:10px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(30px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:all .3s;z-index:300;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--bad)}
+
+/* ===== Màn hình khóa ===== */
+.lock{position:fixed;inset:0;z-index:500;background:linear-gradient(135deg,#0f172a,#1e1b4b 60%,#312e81);display:flex;align-items:center;justify-content:center;padding:16px}
+.lock.hide{display:none}
+.lockcard{background:#fff;border-radius:18px;padding:34px 30px;width:100%;max-width:400px;box-shadow:0 40px 100px rgba(0,0,0,.5);text-align:center}
+.lockcard .lg{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#6366f1,#4338ca);display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;margin:0 auto 14px;box-shadow:0 8px 22px rgba(79,70,229,.4)}
+.lockcard h2{font-size:19px;font-weight:900;color:var(--ink)}
+.lockcard .sb{font-size:12.5px;color:var(--muted);margin:6px 0 20px}
+.lockcard input{text-align:center;font-weight:700;letter-spacing:.04em;padding:12px;margin-bottom:10px}
+.lockcard .go{width:100%;padding:13px;border:none;border-radius:11px;background:linear-gradient(90deg,#6366f1,#4338ca);color:#fff;font-size:14px;font-weight:800;letter-spacing:.04em;box-shadow:0 8px 20px rgba(67,56,202,.35)}
+.lockcard .go:active{transform:scale(.97)}
+.lockcard .alt{background:none;border:none;font-size:12px;font-weight:700;color:var(--indigo);margin-top:14px}
+.lockcard .alt:hover{text-decoration:underline}
+.lockerr{font-size:12px;color:var(--bad);font-weight:700;min-height:17px;margin-bottom:6px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.lockcard.shake{animation:shake .4s}
+</style>
+</head>
+<body>
+
+<!-- ============ MÀN HÌNH KHÓA BẢO MẬT ============ -->
+<div class="lock" id="lock">
+  <div class="lockcard" id="lockCard">
+    <div class="lg">🔐</div>
+    <h2 id="lockTitle">IDECO · Pharma Prompt AI</h2>
+    <p class="sb" id="lockSub">Ứng dụng nội bộ — vui lòng nhập mật khẩu để tiếp tục</p>
+
+    <!-- Đăng nhập -->
+    <div id="lockLogin">
+      <input type="password" id="lockPass" placeholder="Nhập mật khẩu..." autocomplete="off">
+      <div class="lockerr" id="lockErr"></div>
+      <button class="go" id="lockGo">MỞ KHÓA</button>
+      <br><button class="alt" id="lockToChange">🔑 Đổi mật khẩu mới</button>
+    </div>
+
+    <!-- Đổi mật khẩu -->
+    <div id="lockChange" style="display:none">
+      <input type="password" id="lockMaster" placeholder="Mật khẩu quản trị..." autocomplete="off">
+      <input type="password" id="lockNew1" placeholder="Mật khẩu mới..." autocomplete="off">
+      <input type="password" id="lockNew2" placeholder="Nhập lại mật khẩu mới..." autocomplete="off">
+      <div class="lockerr" id="lockErr2"></div>
+      <button class="go" id="lockSaveNew">💾 LƯU MẬT KHẨU MỚI</button>
+      <br><button class="alt" id="lockToLogin">← Quay lại đăng nhập</button>
+    </div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="brand">
+    <div class="logo">✒️</div>
+    <div>
+      <h1>Pharma Prompt AI <span>· IDECO</span></h1>
+      <div class="sub">Xử lý ảnh & tạo Prompt hàng loạt (6 SP) · Tạo ảnh GPT-Image-2 (Kie.ai) · dùng nội bộ</div>
+    </div>
+  </div>
+  <div class="topbtns">
+    <div class="credit"><span class="dot" id="cdot"></span> Credits: <b id="creditVal" class="mono">—</b>
+      <button class="sbtn" id="btnCredit" style="padding:3px 9px;margin-left:4px">↻</button>
+    </div>
+    <button class="tbtn indigo" id="btnHistory">🕘 Lịch sử</button>
+    <button class="tbtn green" id="btnExcel">📊 Excel</button>
+  </div>
+</header>
+
+<div class="modes">
+  <button class="mtab on" id="tabProduct">🧪 Prompt Sản Phẩm (6 SP)</button>
+  <button class="mtab" id="tabFree">✨ Tạo Ảnh Tự Do</button>
+</div>
+
+<div class="wrap">
+  <!-- ================== CHẾ ĐỘ SẢN PHẨM ================== -->
+  <div class="sheet" id="viewProduct">
+    <div class="cols">
+      <!-- ===== FORM CARD ===== -->
+      <div class="pcard">
+        <div class="ptabs" id="ptabs"></div>
+        <div class="pbody">
+          <div class="phead">
+            <h2>💊 Thông Tin SP <span id="curTabNum">1</span></h2>
+            <div class="aspectbox" id="aspectSeg">
+              <button data-a="vertical">📱 Dọc</button>
+              <button data-a="square">⬛ Vuông</button>
+              <button data-a="horizontal">🖥️ Ngang</button>
+            </div>
+          </div>
+
+          <div class="stack">
+            <!-- ===== Vùng ảnh sản phẩm ===== -->
+            <div class="upcard">
+              <div class="uphead">
+                <span class="t">Ảnh Sản Phẩm (Gốc/Xử lý)</span>
+                <div id="imgHeadBtns" style="display:none;gap:10px">
+                  <button class="linkbtn blue" id="btnDlProdImg" title="Tải ảnh sản phẩm về máy">⬇ Tải về</button>
+                  <button class="linkbtn red" id="btnDelImg">🗑 Xóa</button>
+                </div>
+              </div>
+              <input type="file" id="upInput" accept="image/*" hidden>
+
+              <!-- Trạng thái chưa có ảnh -->
+              <div id="upEmpty">
+                <div class="updrop" id="upDrop">
+                  <span class="ic">📤</span>
+                  <span>Click để tải ảnh lên</span>
+                </div>
+                <div class="urlrow">
+                  <span style="opacity:.5">🔗</span>
+                  <input type="text" id="urlInput1" placeholder="Dán link ảnh (URL) vào đây...">
+                  <button class="mbtn slate" id="btnUrlLoad1">Tải ảnh</button>
+                  <button class="mbtn indigo" id="btnUrlRmbg1" title="Xóa nền tự động bằng API remover.bg">🧽 Tải & Xóa nền (remover.bg)</button>
+                </div>
+              </div>
+
+              <!-- Trạng thái có ảnh -->
+              <div id="upFilled" style="display:none">
+                <div class="imgrow">
+                  <div class="thumbwrap">
+                    <div class="busy" id="imgBusy" style="display:none"><span class="spin" style="font-size:20px">⏳</span></div>
+                    <img id="upPreview" alt="Product">
+                  </div>
+                  <div style="flex:1">
+                    <p style="font-size:13px;font-weight:700;margin-bottom:8px">Công cụ xử lý ảnh:</p>
+                    <div style="display:flex;flex-wrap:wrap;gap:8px">
+                      <button class="mbtn indigo" id="btnRemoveBg" title="Sử dụng API remover.bg để xóa nền">🧽 Xóa nền (remover.bg)</button>
+                      <button class="mbtn purple" id="btnMake3D">📦 Tạo 3D</button>
+                      <button class="mbtn gray" id="btnSwapImg">Đổi ảnh</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="urlrow">
+                  <span style="opacity:.5">🔗</span>
+                  <input type="text" id="urlInput2" placeholder="Dán link ảnh mới (URL)...">
+                  <button class="mbtn slate" id="btnUrlLoad2">Tải ảnh</button>
+                  <button class="mbtn indigo" id="btnUrlRmbg2" title="Xóa nền trực tiếp từ link bằng API remover.bg">🧽 Tải & Xóa nền (remover.bg)</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===== Tên thuốc + ETC + gợi ý thư viện ===== -->
+            <div class="namewrap">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:8px;flex-wrap:wrap">
+                <label class="lbl b" style="margin:0;text-transform:uppercase">Tên Thuốc (Tiêu đề 1)</label>
+                <div class="etc" id="etcBox">
+                  <span style="font-size:12px" id="etcIcon">⚠️</span>
+                  <span class="txt">Thuốc kê toa (ETC)</span>
+                  <button class="sw" id="etcSw"></button>
+                </div>
+              </div>
+              <div class="field" style="position:relative">
+                <span class="ic">💊</span>
+                <input type="text" id="f_name" placeholder="VD: Panadol Extra" autocomplete="off">
+                <ul class="suggest" id="nameSuggest"></ul>
+              </div>
+            </div>
+
+            <div class="g2">
+              <div>
+                <label class="lbl">Hàm lượng & Quy cách</label>
+                <input type="text" id="f_dosage" placeholder="VD: 500mg, Hộp 20 viên">
+              </div>
+              <div>
+                <label class="lbl">Công dụng (Dòng phụ)</label>
+                <div class="field"><span class="ic">💗</span><input type="text" id="f_usage" placeholder="VD: Giảm đau, hạ sốt"></div>
+              </div>
+            </div>
+
+            <div class="g2">
+              <div>
+                <label class="lbl b">Giá Niêm Yết (Tiêu đề 2)</label>
+                <div class="field"><span class="ic">🏷️</span><input type="text" id="f_listPrice" placeholder="VD: 73,000 đồng/ hộp 20 gói 5ml" style="font-weight:600;color:#475569"></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                  <label class="lbl b" style="margin:0;color:var(--em-dark)">Giá IDECO (Tiêu đề 3 - Nổi bật)</label>
+                  <span class="cp-badge pulse">CENTERPIECE</span>
+                </div>
+                <div class="field"><span class="ic">💲</span><input type="text" id="f_idecoPrice" class="ideco-input" placeholder="VD: 55,000 đồng/ hộp 3 vỉ x 5"></div>
+              </div>
+            </div>
+
+            <div>
+              <label class="lbl">Nhà Sản Xuất (Tiêu đề 4)</label>
+              <div class="field"><span class="ic">🏭</span><input type="text" id="f_manufacturer" placeholder="VD: Công ty DP APIMED"></div>
+            </div>
+
+            <div>
+              <label class="lbl">Bối cảnh Poster & Mẫu</label>
+              <div class="tplchips" id="tplChips"></div>
+              <textarea id="f_description" style="height:96px" placeholder="Ghi chú thêm về ánh sáng, phong cách..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="pfoot">
+          <button class="btn-go" id="btnGenPrompts">✨ Tạo 6 Prompt Chuyên Nghiệp</button>
+        </div>
+      </div>
+
+      <!-- ===== RESULTS ===== -->
+      <div class="rescol">
+        <div id="resultsWrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================== CHẾ ĐỘ TỰ DO ================== -->
+  <div id="viewFree" style="display:none">
+    <div class="freegrid">
+      <div>
+        <div class="block">
+          <label class="lbl b">Chế độ</label>
+          <div class="seg">
+            <button id="modeT2I" class="on">✨ Tạo từ mô tả</button>
+            <button id="modeI2I">🖼️ Sửa từ ảnh mẫu</button>
+          </div>
+          <div id="refBox" style="display:none;margin-top:10px">
+            <input type="text" id="refInput" placeholder="Link ảnh mẫu (URL), cách nhau dấu phẩy — hoặc tải ảnh lên bên dưới">
+            <div style="margin-top:8px">
+              <button class="sbtn" id="btnRefUpload">📤 Tải ảnh mẫu từ máy</button>
+              <input type="file" id="refFile" accept="image/*" multiple hidden>
+            </div>
+            <div class="refthumbs" id="refThumbs"></div>
+            <div class="hint" style="margin-top:6px">Tối đa 5 ảnh. Ảnh tải từ máy sẽ được đưa lên máy chủ tạm của Kie.ai (tự xoá sau 3 ngày).</div>
+          </div>
+        </div>
+
+        <div class="block">
+          <label class="lbl b">Mô tả ảnh cần tạo</label>
+          <textarea id="freePrompt" style="min-height:130px;resize:vertical" placeholder="VD: Poster quảng cáo sản phẩm dược mỹ phẩm, tông đỏ trắng sang trọng, chữ 'IDECO PHARMA' nổi bật, phong cách chuyên nghiệp..."></textarea>
+          <div class="chips" id="chips"></div>
+        </div>
+
+        <div class="block row2">
+          <div>
+            <label class="lbl">Khung ảnh</label>
+            <select id="freeAspect">
+              <option value="auto">Tự động</option>
+              <option value="1:1">1:1 vuông</option>
+              <option value="4:3">4:3 ngang</option>
+              <option value="3:4">3:4 dọc</option>
+              <option value="16:9">16:9 banner</option>
+              <option value="9:16">9:16 story</option>
+              <option value="3:2">3:2</option>
+              <option value="2:3">2:3</option>
+              <option value="21:9">21:9 siêu rộng</option>
+            </select>
+          </div>
+          <div>
+            <label class="lbl">Độ phân giải</label>
+            <select id="freeRes">
+              <option value="1K">1K — nhanh, rẻ</option>
+              <option value="2K">2K — nét</option>
+              <option value="4K">4K — in ấn</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-go red" id="btnFreeGo">🎨 TẠO ẢNH</button>
+        <div class="hint" style="margin-top:9px">💡 GPT-Image-2 vẽ chữ tiếng Việt trên ảnh khá tốt — ghi rõ nội dung chữ trong ngoặc kép. Ảnh mất 30 giây – 2 phút.</div>
+      </div>
+
+      <div>
+        <div class="ritem" id="freeJob" style="display:none">
+          <div class="rithead"><span class="lft" id="freeJobPrompt" style="font-weight:500;font-size:12px;color:var(--muted)"></span><span class="ready mono" id="freeJobState">đang gửi...</span></div>
+          <div class="prog show" style="margin:12px 15px"><i id="freeJobBar"></i></div>
+        </div>
+        <div class="empty" id="freeEmpty">
+          <div class="big">🖼️</div>
+          <p>Nhập mô tả bên trái và bấm <b>TẠO ẢNH</b>.<br>Kết quả sẽ hiện tại đây và lưu vào Thư viện bên dưới.</p>
+        </div>
+        <div id="freeResult"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================== THƯ VIỆN ẢNH ================== -->
+  <div class="galhead">
+    <h2>🗂️ Thư viện ảnh đã tạo</h2>
+    <span class="cnt" id="galCnt"></span>
+  </div>
+  <div class="grid" id="gallery"></div>
+  <div class="empty" id="galEmpty">
+    <div class="big">📸</div>
+    <p>Chưa có ảnh nào. Ảnh tạo xong sẽ lưu tại đây (trên máy này). <b>Nhớ tải về — link ảnh Kie.ai hết hạn sau 24 giờ!</b></p>
+  </div>
+</div>
+
+<!-- ============ MODAL EXCEL ============ -->
+<div class="mask" id="excelMask">
+  <div class="modal excel-s1" id="excelModal">
+    <div class="mhead">
+      <div class="mtitle"><span class="icbox green">📊</span><span id="excelTitle">Nhập Dữ Liệu Từ Excel</span></div>
+      <div class="rgt">
+        <button class="reloadbtn" id="btnExcelReset" style="display:none">🔄 Tải file khác</button>
+        <button class="xbtn" data-close="excelMask">✕</button>
+      </div>
+    </div>
+    <div class="mbody custom-scroll" id="excelBody">
+      <!-- BƯỚC 1 -->
+      <div id="excelStep1">
+        <div class="dropzone" id="excelDrop">
+          <div class="ic">📤</div>
+          <p class="t1">Click để tải file Excel (.xlsx, .xls)</p>
+          <p class="t2">Dữ liệu sẽ được bảo mật và chỉ xử lý trên trình duyệt của bạn</p>
+        </div>
+        <input type="file" id="excelFile" accept=".xlsx,.xls" hidden>
+      </div>
+
+      <!-- BƯỚC 2 -->
+      <div id="excelStep2" style="display:none">
+        <div class="mapcard">
+          <div class="maphead">
+            <h4>➡️ BƯỚC 1: CẤU HÌNH CỘT DỮ LIỆU</h4>
+            <button class="savecfg" id="btnSaveCfg">💾 LƯU CẤU HÌNH</button>
+          </div>
+          <div class="mapgrid" id="mapGrid"></div>
+          <p class="mapnote">* Vui lòng chọn chính xác cột "Đơn giá hộp" hoặc "Giá chiết khấu" cho mục Giá niêm yết/IDECO để hệ thống lấy đúng dữ liệu.</p>
+        </div>
+
+        <div class="pickhead">
+          <h4>✅ BƯỚC 2: CHỌN SẢN PHẨM (Tối đa 6)</h4>
+          <div class="searchbox">
+            <span class="ic">🔍</span>
+            <input type="text" id="excelSearch" placeholder="Tìm kiếm nhanh sản phẩm...">
+          </div>
+        </div>
+
+        <div class="tablecard">
+          <div class="tscroll custom-scroll" id="tscroll">
+            <table class="xt">
+              <thead><tr id="xtHead"></tr></thead>
+              <tbody id="xtBody"></tbody>
+            </table>
+          </div>
+          <div class="scrolltip">
+            <span><span class="bounce-x arrow">➜</span> Kéo thanh trượt ngang để xem các cột bị ẩn</span>
+            <span id="xtTotal">Tổng: 0 dòng</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <div class="lft" id="selInfo"></div>
+      <div class="rgt">
+        <button class="tbtn" data-close="excelMask">ĐÓNG</button>
+        <button class="tbtn solid-indigo" id="btnApplyExcel" style="display:none" disabled>NHẬP DỮ LIỆU ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL LỊCH SỬ ============ -->
+<div class="mask" id="histMask">
+  <div class="modal hist">
+    <div class="mhead">
+      <div class="mtitle"><span class="icbox indigo">🕘</span> Lịch Sử Prompt Đã Tạo</div>
+      <button class="xbtn" data-close="histMask">✕</button>
+    </div>
+    <div class="mbody custom-scroll" id="histBody" style="background:#f6f8fa"></div>
+  </div>
+</div>
+
+<div class="lb" id="lb"><img id="lbImg" src="" alt=""></div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+/* ============================================================
+   BẢO MẬT — MÀN HÌNH KHÓA
+   - Mật khẩu mặc định: minhtriet@2026 (có thể đổi, lưu trong máy)
+   - Đổi mật khẩu: cần mật khẩu quản trị minhtriet1973
+   - Đăng nhập thành công → lưu localStorage, lần sau không cần nhập lại
+============================================================ */
+(function(){
+  const DEFAULT_PASS = 'minhtriet@2026';
+  const MASTER_PASS  = 'minhtriet1973';
+  const LS_PASS = 'ideco_app_password';
+  const LS_AUTH = 'ideco_app_auth_ok';
+  const g = id => document.getElementById(id);
+  const getPass = () => localStorage.getItem(LS_PASS) || DEFAULT_PASS;
+
+  function unlock(){
+    g('lock').classList.add('hide');
+  }
+  function shake(msgEl, msg){
+    msgEl.textContent = msg;
+    const c = g('lockCard');
+    c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
+  }
+
+  // Đã đăng nhập trước đó → vào thẳng
+  if(localStorage.getItem(LS_AUTH) === '1'){ unlock(); }
+  else setTimeout(() => g('lockPass').focus(), 100);
+
+  function tryLogin(){
+    if(g('lockPass').value === getPass()){
+      localStorage.setItem(LS_AUTH, '1');
+      unlock();
+    }else{
+      g('lockPass').value = '';
+      shake(g('lockErr'), 'Sai mật khẩu. Vui lòng thử lại.');
+    }
+  }
+  g('lockGo').onclick = tryLogin;
+  g('lockPass').addEventListener('keydown', e => { if(e.key === 'Enter') tryLogin(); });
+
+  // Chuyển qua lại giữa đăng nhập / đổi mật khẩu
+  g('lockToChange').onclick = () => {
+    g('lockLogin').style.display = 'none';
+    g('lockChange').style.display = 'block';
+    g('lockTitle').textContent = 'Đổi Mật Khẩu';
+    g('lockSub').textContent = 'Nhập mật khẩu quản trị để xác nhận quyền đổi mật khẩu';
+    g('lockErr').textContent = ''; g('lockErr2').textContent = '';
+    setTimeout(() => g('lockMaster').focus(), 50);
+  };
+  g('lockToLogin').onclick = () => {
+    g('lockChange').style.display = 'none';
+    g('lockLogin').style.display = 'block';
+    g('lockTitle').textContent = 'IDECO · Pharma Prompt AI';
+    g('lockSub').textContent = 'Ứng dụng nội bộ — vui lòng nhập mật khẩu để tiếp tục';
+    ['lockMaster','lockNew1','lockNew2'].forEach(id => g(id).value = '');
+    g('lockErr2').textContent = '';
+    setTimeout(() => g('lockPass').focus(), 50);
+  };
+
+  // Lưu mật khẩu mới
+  function saveNewPass(){
+    if(g('lockMaster').value !== MASTER_PASS){
+      g('lockMaster').value = '';
+      shake(g('lockErr2'), 'Mật khẩu quản trị không đúng.');
+      return;
+    }
+    const p1 = g('lockNew1').value, p2 = g('lockNew2').value;
+    if(!p1 || p1.length < 4){ shake(g('lockErr2'), 'Mật khẩu mới phải có ít nhất 4 ký tự.'); return; }
+    if(p1 !== p2){ shake(g('lockErr2'), 'Hai lần nhập mật khẩu mới không khớp.'); return; }
+    localStorage.setItem(LS_PASS, p1);
+    localStorage.setItem(LS_AUTH, '1'); // đổi xong tự đăng nhập luôn
+    unlock();
+    setTimeout(() => {
+      const t = document.getElementById('toast');
+      if(t){ t.textContent = 'Đã lưu mật khẩu mới ✓'; t.className = 'toast show'; setTimeout(()=> t.className = 'toast', 4000); }
+    }, 300);
+  }
+  g('lockSaveNew').onclick = saveNewPass;
+  ['lockMaster','lockNew1','lockNew2'].forEach(id => g(id).addEventListener('keydown', e => { if(e.key === 'Enter') saveNewPass(); }));
+})();
+
+/* ============================================================
+   CẤU HÌNH — KEY VIẾT TRỰC TIẾP TRONG CODE (DÙNG NỘI BỘ)
+   ⚠️ KHÔNG đưa file này lên website công khai!
+============================================================ */
+const KIE_API_KEY      = '3fb45067e29a8aabb5e6f182b9d7b8e4';  // Key Kie.ai — tạo ảnh GPT-Image-2
+const GEMINI_API_KEY   = '';                                   // (Tuỳ chọn) Dán key Google Gemini để tạo prompt bằng AI + tính năng "Tạo 3D". Để trống → app tự tạo prompt bằng bộ máy nội bộ, vẫn đầy đủ.
+const REMOVEBG_API_KEY = 'Fyd9mdnXCrjEMsxfkPujTZ8v';           // Key remover.bg — xóa nền ảnh
+
+const KIE_BASE    = 'https://api.kie.ai';
+const KIE_UPLOAD  = 'https://kieai.redpandaai.co/api/file-base64-upload';
+const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
+
+const LS_HIST_IMG = 'taoanh_gptimage2_history';
+const LS_HIST_PR  = 'savedPrompts';
+const LS_LIB      = 'excelMasterLibrary';
+const LS_MAP      = 'excelColumnMapping';
+
+const $ = id => document.getElementById(id);
+const kieHeaders = () => ({ 'Authorization': 'Bearer ' + KIE_API_KEY, 'Content-Type': 'application/json' });
+
+/* ============================================================
+   TIỆN ÍCH
+============================================================ */
+function toast(msg, isErr){
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isErr ? ' err' : '');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(()=> t.className = 'toast', 4000);
+}
+function lsGet(k, def){ try{ const v = JSON.parse(localStorage.getItem(k)); return v == null ? def : v; }catch(_){ return def; } }
+function lsSet(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+async function copyText(txt, btn){
+  try{ await navigator.clipboard.writeText(txt); }
+  catch(_){
+    const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove();
+  }
+  if(btn){
+    const old = btn.innerHTML;
+    btn.innerHTML = '✓ Đã sao chép'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.innerHTML = old; btn.classList.remove('copied'); }, 2000);
+  } else toast('Đã sao chép ✓');
+}
+
+/* ============================================================
+   XỬ LÝ GIÁ — logic gốc từ ExcelImportModal.tsx
+============================================================ */
+function getNumericPrice(priceVal){
+  if(priceVal === undefined || priceVal === null || String(priceVal).trim() === '') return 0;
+  if(typeof priceVal === 'number') return Math.round(priceVal);
+  let s = String(priceVal).trim();
+  s = s.replace(/(?:đồng|vnđ|vnd|đ)/gi, '').trim();
+  if(s.includes('/')) s = s.split('/')[0].trim();
+  if(/^[0-9]+$/.test(s)) return parseInt(s, 10);
+  if(s.endsWith(',00') || s.endsWith('.00')) s = s.substring(0, s.length - 3);
+  const lastDot = s.lastIndexOf('.'), lastComma = s.lastIndexOf(',');
+  if(lastDot !== -1 && lastComma !== -1){
+    if(lastDot > lastComma) return Math.round(parseFloat(s.replace(/,/g, ''))) || 0;
+    return Math.round(parseFloat(s.replace(/\./g, '').replace(',', '.'))) || 0;
+  }
+  if(lastDot !== -1 && lastComma === -1){
+    const parts = s.split('.');
+    if(parts[parts.length - 1].length === 3) return parseInt(s.replace(/\./g, ''), 10) || 0;
+    return Math.round(parseFloat(s)) || 0;
+  }
+  if(lastComma !== -1 && lastDot === -1){
+    const parts = s.split(',');
+    if(parts[parts.length - 1].length === 3) return parseInt(s.replace(/,/g, ''), 10) || 0;
+    return Math.round(parseFloat(s.replace(',', '.'))) || 0;
+  }
+  const n = s.replace(/[^0-9]/g, '');
+  return parseInt(n, 10) || 0;
+}
+function formatPriceString(priceVal, packVal){
+  if(priceVal === undefined || priceVal === null || String(priceVal).trim() === '') return '';
+  let p;
+  if(typeof priceVal === 'number') p = priceVal.toLocaleString('vi-VN');
+  else{
+    const s = String(priceVal).trim();
+    const n = s.replace(/[^0-9]/g, '');
+    p = (n && !isNaN(parseInt(n))) ? parseInt(n).toLocaleString('vi-VN') : s;
+  }
+  if(p && !p.toLowerCase().includes('đồng') && /^[0-9.,]+$/.test(p.replace(/[^0-9.,]/g, ''))) p += ' đồng';
+  if(packVal && String(packVal).trim()) return p + '/ ' + String(packVal).trim();
+  return p;
+}
+
+/* ============================================================
+   DỮ LIỆU 6 SẢN PHẨM
+============================================================ */
+const emptyProduct = id => ({ id, name:'', dosage:'', usage:'', isETC:false, listPrice:'', idecoPrice:'', manufacturer:'', description:'', imageBase64:null, mimeType:null, aspectRatio:'vertical' });
+const products = [1,2,3,4,5,6].map(emptyProduct);
+const results  = [1,2,3,4,5,6].map(id => ({ id, prompt:'', status:'pending', imageUrl:null, imgBusy:false, refUrls:[] }));
+let activeTab = 1;
+let genBusy = false, imgProcBusy = false;
+
+const PROMPT_TEMPLATES = [
+  { id:'female_patient', label:'👩 Nữ bệnh nhân', text:'Tạo poster chuyên nghiệp. Một bệnh nhân nữ trung niên người Việt Nam, tay cầm sản phẩm, tươi cười, tại phòng khám hiện đại.' },
+  { id:'doctor_consult', label:'👨‍⚕️ Bác sĩ tư vấn', text:'Bác sĩ nam đang tư vấn, cầm hộp sản phẩm đưa về hướng bệnh nhân nam. Nền sáng, chuyên nghiệp.' },
+  { id:'packshot_3d', label:'📦 Packshot 3D', text:'Chụp packshot sản phẩm 3D chuyên nghiệp, đặt trên bục sang trọng, ánh sáng cinematic.' }
+];
+$('tplChips').innerHTML = PROMPT_TEMPLATES.map((t, i) => `<button class="tpl" data-i="${i}">❝ ${t.label}</button>`).join('');
+$('tplChips').querySelectorAll('.tpl').forEach(b => b.onclick = () => {
+  cur().description = PROMPT_TEMPLATES[+b.dataset.i].text;
+  $('f_description').value = cur().description;
+});
+
+function renderPTabs(){
+  $('ptabs').innerHTML = products.map(p =>
+    `<button class="ptab ${p.id===activeTab?'on':''}" data-id="${p.id}">Sản phẩm ${p.id}</button>`).join('');
+  $('ptabs').querySelectorAll('.ptab').forEach(b => b.onclick = () => { activeTab = +b.dataset.id; renderPTabs(); loadForm(); });
+}
+function cur(){ return products.find(p => p.id === activeTab); }
+
+const FIELDS = ['name','dosage','usage','listPrice','idecoPrice','manufacturer','description'];
+function loadForm(){
+  const p = cur();
+  $('curTabNum').textContent = p.id;
+  FIELDS.forEach(f => $('f_'+f).value = p[f] || '');
+  renderETC(); renderAspect(); renderUpzone(); hideSuggest();
+}
+FIELDS.forEach(f => $('f_'+f).addEventListener('input', e => {
+  cur()[f] = e.target.value;
+  if(f === 'name') showSuggest();
+}));
+function renderETC(){
+  const on = cur().isETC;
+  $('etcSw').classList.toggle('on', on);
+  $('etcBox').classList.toggle('on', on);
+}
+$('etcSw').onclick = () => { cur().isETC = !cur().isETC; renderETC(); };
+function renderAspect(){
+  $('aspectSeg').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.a === cur().aspectRatio));
+}
+$('aspectSeg').querySelectorAll('button').forEach(b => b.onclick = () => { cur().aspectRatio = b.dataset.a; renderAspect(); });
+
+/* ===== Gợi ý từ thư viện ngay dưới ô Tên Thuốc (như bản gốc) ===== */
+function showSuggest(){
+  const q = (cur().name || '').toLowerCase();
+  const ul = $('nameSuggest');
+  if(!q || !masterLibrary.length || !columnMapping.name){ ul.classList.remove('show'); return; }
+  const key = columnMapping.name;
+  const hits = masterLibrary.filter(it => it[key] && String(it[key]).toLowerCase().includes(q)).slice(0, 5);
+  if(!hits.length){ ul.classList.remove('show'); return; }
+  ul.innerHTML = hits.map(it => `<li data-i="${masterLibrary.indexOf(it)}">${esc(it[key])}</li>`).join('');
+  ul.classList.add('show');
+  ul.querySelectorAll('li').forEach(li => li.onmousedown = () => {
+    applyLibraryItem(masterLibrary[+li.dataset.i]);
+    hideSuggest();
+  });
+}
+function hideSuggest(){ $('nameSuggest').classList.remove('show'); }
+$('f_name').addEventListener('focus', showSuggest);
+$('f_name').addEventListener('blur', () => setTimeout(hideSuggest, 200));
+function applyLibraryItem(row){
+  const p = cur();
+  p.name = String(row[columnMapping.name] || '').trim();
+  p.dosage = String(row[columnMapping.dosage] || '').trim();
+  p.usage = String(row[columnMapping.usage] || '').trim();
+  p.listPrice = formatPriceString(row[columnMapping.listPrice], row[columnMapping.packaging]);
+  p.idecoPrice = formatPriceString(row[columnMapping.idecoPrice], row[columnMapping.packaging]);
+  p.manufacturer = String(row[columnMapping.manufacturer] || '').trim();
+  loadForm();
+  toast('Đã áp dữ liệu từ thư viện ✓');
+}
+
+/* ===== Ảnh sản phẩm ===== */
+function renderUpzone(){
+  const p = cur();
+  const has = !!p.imageBase64;
+  $('upEmpty').style.display = has ? 'none' : 'block';
+  $('upFilled').style.display = has ? 'block' : 'none';
+  $('imgHeadBtns').style.display = has ? 'flex' : 'none';
+  if(has) $('upPreview').src = p.imageBase64;
+}
+function setProductImage(dataUrl, mime){
+  cur().imageBase64 = dataUrl; cur().mimeType = mime || 'image/png';
+  renderUpzone();
+}
+function loadImageFile(file){
+  if(!file) return;
+  if(file.size > 5*1024*1024){ toast('Ảnh quá lớn. Vui lòng chọn ảnh dưới 5MB.', true); return; }
+  const rd = new FileReader();
+  rd.onloadend = () => setProductImage(rd.result, file.type);
+  rd.readAsDataURL(file);
+}
+$('upDrop').onclick = () => $('upInput').click();
+$('btnSwapImg').onclick = () => $('upInput').click();
+$('upInput').onchange = e => { loadImageFile(e.target.files[0]); e.target.value = ''; };
+$('btnDelImg').onclick = () => { cur().imageBase64 = null; cur().mimeType = null; renderUpzone(); };
+$('btnDlProdImg').onclick = () => {
+  const p = cur();
+  if(!p.imageBase64) return;
+  const a = document.createElement('a');
+  a.href = p.imageBase64;
+  a.download = (p.name ? p.name.trim().replace(/\s+/g, '_') : 'Product_' + activeTab) + '.png';
+  document.body.appendChild(a); a.click(); a.remove();
+};
+
+function setImgBusy(on){
+  imgProcBusy = on;
+  $('imgBusy').style.display = on ? 'flex' : 'none';
+  ['btnRemoveBg','btnMake3D','btnUrlLoad1','btnUrlRmbg1','btnUrlLoad2','btnUrlRmbg2'].forEach(id => $(id).disabled = on);
+}
+
+/* Xóa nền — remover.bg (base64 hoặc URL, có fallback fetch client-side như bản gốc) */
+async function callRemoveBg(payload){
+  const r = await fetch('https://api.remove.bg/v1.0/removebg', {
+    method:'POST',
+    headers:{ 'X-Api-Key': REMOVEBG_API_KEY, 'Content-Type':'application/json', 'Accept':'image/png' },
+    body: JSON.stringify(payload)
+  });
+  if(!r.ok){
+    let m = 'Lỗi remover.bg (' + r.status + ')';
+    try{
+      const j = await r.json();
+      if(j?.errors?.[0]?.title) m += ': ' + j.errors[0].title;
+      else if(j?.errors?.[0]?.detail) m += ': ' + j.errors[0].detail;
+    }catch(_){ }
+    throw new Error(m);
+  }
+  return await r.blob();
+}
+function blobToDataUrl(blob){
+  return new Promise((res, rej) => { const rd = new FileReader(); rd.onloadend = () => res(rd.result); rd.onerror = () => rej(new Error('Lỗi đọc dữ liệu ảnh.')); rd.readAsDataURL(blob); });
+}
+async function removeBgFromBase64(dataUrl){
+  const raw = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
+  return blobToDataUrl(await callRemoveBg({ image_file_b64: raw, size:'auto' }));
+}
+async function removeBgFromUrl(url){
+  try{
+    return blobToDataUrl(await callRemoveBg({ image_url: url, size:'auto' }));
+  }catch(urlError){
+    // fallback: fetch client-side rồi gửi base64 (như bản gốc)
+    try{
+      const cr = await fetch(url);
+      const blob = await cr.blob();
+      const b64 = (await blobToDataUrl(blob)).split(',')[1];
+      return blobToDataUrl(await callRemoveBg({ image_file_b64: b64, size:'auto' }));
+    }catch(_){ throw urlError; }
+  }
+}
+$('btnRemoveBg').onclick = async () => {
+  const p = cur();
+  if(!p.imageBase64 || imgProcBusy) return;
+  setImgBusy(true);
+  try{
+    setProductImage(await removeBgFromBase64(p.imageBase64), 'image/png');
+    toast('Đã xóa nền ✓');
+  }catch(e){ toast('Lỗi xử lý ảnh: ' + e.message, true); }
+  finally{ setImgBusy(false); }
+};
+
+/* Tải ảnh từ URL / Tải & Xóa nền từ URL — như ProductForm gốc */
+async function urlLoad(inputId){
+  const url = $(inputId).value.trim();
+  if(!url) return;
+  setImgBusy(true);
+  try{
+    const r = await fetch(url);
+    const blob = await r.blob();
+    if(blob.size > 5*1024*1024) throw new Error('Ảnh quá 5MB');
+    setProductImage(await blobToDataUrl(blob), blob.type || 'image/png');
+    $(inputId).value = '';
+  }catch(_){
+    toast('Lỗi tải ảnh. Vui lòng thử lại hoặc tải ảnh về máy rồi upload thủ công.', true);
+  }finally{ setImgBusy(false); }
+}
+async function urlLoadRmbg(inputId){
+  const url = $(inputId).value.trim();
+  if(!url) return;
+  setImgBusy(true);
+  try{
+    setProductImage(await removeBgFromUrl(url), 'image/png');
+    $(inputId).value = '';
+    toast('Đã tải & xóa nền ✓');
+  }catch(e){
+    toast('Lỗi xóa nền bằng remover.bg: ' + (e.message || 'Vui lòng kiểm tra lại liên kết ảnh.'), true);
+  }finally{ setImgBusy(false); }
+}
+$('btnUrlLoad1').onclick = () => urlLoad('urlInput1');
+$('btnUrlLoad2').onclick = () => urlLoad('urlInput2');
+$('btnUrlRmbg1').onclick = () => urlLoadRmbg('urlInput1');
+$('btnUrlRmbg2').onclick = () => urlLoadRmbg('urlInput2');
+
+/* Tạo 3D — Gemini image (chỉ khi có GEMINI_API_KEY) */
+$('btnMake3D').onclick = async () => {
+  const p = cur();
+  if(!p.imageBase64 || imgProcBusy) return;
+  if(!GEMINI_API_KEY){ toast('Chưa cấu hình GEMINI_API_KEY trong code — tính năng Tạo 3D cần key Gemini.', true); return; }
+  setImgBusy(true);
+  try{
+    const raw = p.imageBase64.split(',')[1];
+    const r = await fetch(GEMINI_BASE + 'gemini-2.5-flash-image:generateContent?key=' + GEMINI_API_KEY, {
+      method:'POST', headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ contents:[{ parts:[
+        { inline_data:{ mime_type: p.mimeType || 'image/png', data: raw } },
+        { text: 'Transform this product photo into a professional 3D packshot on a clean surface. Keep all labels and text on the packaging exactly the same.' }
+      ]}]})
+    });
+    const d = await r.json();
+    const parts = d?.candidates?.[0]?.content?.parts || [];
+    const imgPart = parts.find(x => x.inlineData || x.inline_data);
+    if(!imgPart) throw new Error(d?.error?.message || 'AI did not return an image.');
+    const pd = imgPart.inlineData || imgPart.inline_data;
+    setProductImage('data:' + (pd.mimeType || pd.mime_type || 'image/png') + ';base64,' + pd.data, 'image/png');
+    toast('Đã tạo ảnh 3D ✓');
+  }catch(e){ toast('Lỗi xử lý ảnh: ' + e.message, true); }
+  finally{ setImgBusy(false); }
+};
+
+/* ============================================================
+   MODAL EXCEL — tái tạo đầy đủ ExcelImportModal gốc
+============================================================ */
+let masterLibrary = lsGet(LS_LIB, []);
+let columnMapping = Object.assign({ name:'', dosage:'', usage:'', listPrice:'', idecoPrice:'', manufacturer:'', packaging:'' }, lsGet(LS_MAP, {}));
+
+const MAPPING_FIELDS = [
+  ['name','Tên Thuốc'], ['dosage','Hàm Lượng'], ['packaging','Quy cách đóng gói'], ['usage','Công Dụng'],
+  ['listPrice','Giá Niêm Yết (Tiêu đề 2)'], ['idecoPrice','Giá IDECO (Tiêu đề 3)'], ['manufacturer','Nhà Sản Xuất']
+];
+
+const EX = {
+  step: 1,
+  data: [],
+  columns: [],
+  mapping: { name:'', dosage:'', usage:'', listPrice:'', idecoPrice:'', manufacturer:'', packaging:'' },
+  selected: new Set(),        // originalIndex
+  discounts: {},              // originalIndex -> string
+  search: '',
+  saveStatus: 'idle'
+};
+
+$('btnExcel').onclick = () => {
+  // như bản gốc: nếu đã có thư viện lưu → tự vào bước 2
+  if(masterLibrary.length){
+    EX.data = masterLibrary;
+    EX.columns = Object.keys(masterLibrary[0] || {});
+    EX.mapping = Object.assign({}, columnMapping);
+    EX.step = 2;
+  }else{
+    exReset();
+  }
+  EX.selected = new Set(); EX.discounts = {}; EX.search = ''; EX.saveStatus = 'idle';
+  renderExcel();
+  openMask('excelMask');
+};
+function exReset(){
+  EX.step = 1; EX.data = []; EX.columns = [];
+  EX.mapping = { name:'', dosage:'', usage:'', listPrice:'', idecoPrice:'', manufacturer:'', packaging:'' };
+  EX.selected = new Set(); EX.discounts = {}; EX.search = ''; EX.saveStatus = 'idle';
+}
+$('btnExcelReset').onclick = () => { exReset(); renderExcel(); };
+$('excelDrop').onclick = () => $('excelFile').click();
+
+$('excelFile').onchange = e => {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const rd = new FileReader();
+  rd.onload = ev => {
+    try{
+      const wb = XLSX.read(new Uint8Array(ev.target.result), { type:'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+
+      // 1. Lấy các dòng thô để dò dòng tiêu đề (như bản gốc)
+      const rawRows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      if(!rawRows.length){ toast('File không có dữ liệu.', true); return; }
+      const headerIndex = rawRows.findIndex(row => row && row.length > 0);
+      if(headerIndex === -1){ toast('Không tìm thấy dòng tiêu đề.', true); return; }
+      const headerRow = rawRows[headerIndex];
+
+      // Tạo header duy nhất (Column_N cho ô trống, hậu tố _2 _3 cho trùng tên)
+      const counts = {};
+      const uniqueHeaders = headerRow.map((h, idx) => {
+        let name = String(h == null ? '' : h).trim();
+        if(!name) name = 'Column_' + (idx + 1);
+        if(counts[name]){ counts[name]++; name = name + '_' + counts[name]; }
+        else counts[name] = 1;
+        return name;
+      });
+      EX.columns = uniqueHeaders;
+
+      // 2. Parse dữ liệu với đúng các header duy nhất, bỏ qua dòng tiêu đề
+      EX.data = XLSX.utils.sheet_to_json(ws, { header: uniqueHeaders, range: headerIndex + 1, defval: '' });
+
+      // Tự động ghép cột theo từ khóa (đúng quy tắc gốc)
+      const m = { name:'', dosage:'', usage:'', listPrice:'', idecoPrice:'', manufacturer:'', packaging:'' };
+      uniqueHeaders.forEach(col => {
+        const lower = col.toLowerCase();
+        if(lower.includes('tên thuốc') || lower === 'tên hàng' || lower.includes('biệt dược')) m.name = col;
+        else if(lower.includes('hàm lượng')) m.dosage = col;
+        else if(lower.includes('quy cách') || lower.includes('đóng gói')) m.packaging = col;
+        else if(lower.includes('công dụng')) m.usage = col;
+        else if(lower.includes('niêm yết') || lower.includes('đơn giá hộp') || lower.includes('giá bán')) m.listPrice = col;
+        else if(lower.includes('giá mua') || lower.includes('giá ideco') || lower.includes('giá đại lý') || lower.includes('chiết khấu')) m.idecoPrice = col;
+        else if(lower.includes('nhà sản xuất') || lower.includes('đơn vị sx')) m.manufacturer = col;
+      });
+      EX.mapping = m;
+      EX.step = 2;
+      EX.selected = new Set(); EX.discounts = {}; EX.search = ''; EX.saveStatus = 'idle';
+      renderExcel();
+    }catch(err){
+      console.error('Excel Error:', err);
+      alert('Lỗi đọc file Excel. Vui lòng kiểm tra lại định dạng file.');
+    }
+  };
+  rd.readAsArrayBuffer(file);
+};
+
+function exFiltered(){
+  if(!EX.search.trim()) return EX.data.map((row, idx) => ({ row, originalIndex: idx }));
+  const q = EX.search.toLowerCase();
+  const col = EX.mapping.name || EX.columns[0];
+  return EX.data.map((row, idx) => ({ row, originalIndex: idx }))
+    .filter(({ row }) => { const v = row[col]; return v && String(v).toLowerCase().includes(q); });
+}
+function exCalcIdeco(row, originalIndex){
+  const dStr = EX.discounts[originalIndex] || '';
+  if(dStr !== ''){
+    const d = parseFloat(dStr.replace(',', '.')) || 0;
+    const listRaw = getNumericPrice(row[EX.mapping.listPrice]);
+    return formatPriceString(listRaw * (1 - d / 100), row[EX.mapping.packaging]);
+  }
+  return formatPriceString(row[EX.mapping.idecoPrice], row[EX.mapping.packaging]) || '-';
+}
+
+function renderExcel(){
+  const s2 = EX.step === 2;
+  $('excelModal').className = 'modal ' + (s2 ? 'excel-s2' : 'excel-s1');
+  $('excelTitle').textContent = s2 ? 'Soi Chiếu & Chọn Sản Phẩm' : 'Nhập Dữ Liệu Từ Excel';
+  $('btnExcelReset').style.display = s2 ? 'inline-flex' : 'none';
+  $('excelStep1').style.display = s2 ? 'none' : 'block';
+  $('excelStep2').style.display = s2 ? 'block' : 'none';
+  $('btnApplyExcel').style.display = s2 ? 'inline-flex' : 'none';
+  if(!s2){ renderExFoot(); return; }
+
+  /* BƯỚC 1: cấu hình cột */
+  const opts = c => '<option value="">-- Chọn cột --</option>' + EX.columns.map(col => `<option value="${esc(col)}"${col === c ? ' selected' : ''}>${esc(col)}</option>`).join('');
+  $('mapGrid').innerHTML = MAPPING_FIELDS.map(([k, label]) =>
+    `<div class="mf"><label>${label}${EX.mapping[k] ? '<span class="ok">✓</span>' : ''}</label>
+     <select data-map="${k}" class="${EX.mapping[k] ? 'mapped' : ''}">${opts(EX.mapping[k])}</select></div>`).join('');
+  $('mapGrid').querySelectorAll('select').forEach(sel => sel.onchange = () => {
+    EX.mapping[sel.dataset.map] = sel.value;
+    EX.saveStatus = 'idle';
+    renderExcel();
+  });
+  const sb = $('btnSaveCfg');
+  sb.className = 'savecfg' + (EX.saveStatus === 'saved' ? ' saved' : '');
+  sb.innerHTML = EX.saveStatus === 'saved' ? '✓ ĐÃ LƯU' : '💾 LƯU CẤU HÌNH';
+
+  /* BƯỚC 2: bảng dữ liệu */
+  $('excelSearch').value = EX.search;
+  renderExTable();
+  renderExFoot();
+}
+
+function renderExTable(){
+  const filtered = exFiltered();
+  const mappedCols = Object.values(EX.mapping);
+
+  $('xtHead').innerHTML =
+    '<th class="stt">STT</th><th class="pick">CHỌN</th>' +
+    '<th style="min-width:128px;text-align:center">% CHIẾT KHẤU MỚI</th>' +
+    '<th style="min-width:176px;text-align:center">GIÁ IDECO TẠM TÍNH</th>' +
+    EX.columns.map(col => `<th class="${mappedCols.includes(col) ? 'mapped' : ''}">${esc(col)}</th>`).join('');
+
+  if(!filtered.length){
+    $('xtBody').innerHTML = `<tr><td colspan="${EX.columns.length + 4}" class="noresult">Không tìm thấy dữ liệu.</td></tr>`;
+  }else{
+    $('xtBody').innerHTML = filtered.map(({ row, originalIndex }) => {
+      const sel = EX.selected.has(originalIndex);
+      return `<tr class="${sel ? 'sel' : ''}" data-row="${originalIndex}">
+        <td class="stt">${originalIndex + 1}</td>
+        <td class="pick" data-stop="1"><input type="checkbox" data-ck="${originalIndex}" ${sel ? 'checked' : ''}></td>
+        <td style="text-align:center" data-stop="1">
+          <input class="dcin" type="text" placeholder="Nhập %" data-dc="${originalIndex}" value="${esc(EX.discounts[originalIndex] ?? '')}"> <b style="font-size:11px;color:var(--muted)">%</b>
+        </td>
+        <td class="calc">${esc(exCalcIdeco(row, originalIndex))}</td>
+        ${EX.columns.map(col => `<td class="${col === EX.mapping.name ? 'namecol' : ''}">${esc(row[col] ?? '')}</td>`).join('')}
+      </tr>`;
+    }).join('');
+  }
+  $('xtTotal').textContent = 'Tổng: ' + EX.data.length + ' dòng';
+
+  /* sự kiện — click hàng để chọn (trừ ô có input), checkbox, ô chiết khấu */
+  $('xtBody').querySelectorAll('tr[data-row]').forEach(tr => {
+    tr.onclick = e => {
+      if(e.target.closest('[data-stop]')) return;
+      toggleRow(+tr.dataset.row);
+    };
+  });
+  $('xtBody').querySelectorAll('[data-ck]').forEach(ck => ck.onchange = () => toggleRow(+ck.dataset.ck));
+  $('xtBody').querySelectorAll('[data-dc]').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const oi = +inp.dataset.dc;
+      const val = inp.value;
+      if(val === '' || /^[0-9]*[.,]?[0-9]*$/.test(val)){
+        const num = parseFloat(val.replace(',', '.'));
+        if(!isNaN(num) && num > 100){ inp.value = EX.discounts[oi] ?? ''; return; }
+        EX.discounts[oi] = val;
+        // nhập chiết khấu → tự chọn hàng (như bản gốc)
+        if(val !== '' && !EX.selected.has(oi)){
+          if(EX.selected.size >= 6){ alert('Bạn chỉ có thể chọn tối đa 6 sản phẩm.'); }
+          else EX.selected.add(oi);
+        }
+        // cập nhật ô giá tạm tính + trạng thái hàng mà không vẽ lại cả bảng (giữ focus)
+        const tr = inp.closest('tr');
+        const rowData = EX.data[oi];
+        tr.querySelector('.calc').textContent = exCalcIdeco(rowData, oi);
+        tr.classList.toggle('sel', EX.selected.has(oi));
+        tr.querySelector('[data-ck]').checked = EX.selected.has(oi);
+        renderExFoot();
+      }else{
+        inp.value = EX.discounts[oi] ?? '';
+      }
+    });
+  });
+}
+function toggleRow(oi){
+  if(EX.selected.has(oi)) EX.selected.delete(oi);
+  else{
+    if(EX.selected.size >= 6){ alert('Bạn chỉ có thể chọn tối đa 6 sản phẩm.'); return; }
+    EX.selected.add(oi);
+  }
+  // cập nhật nhanh hàng đó
+  const tr = $('xtBody').querySelector(`tr[data-row="${oi}"]`);
+  if(tr){
+    tr.classList.toggle('sel', EX.selected.has(oi));
+    const ck = tr.querySelector('[data-ck]');
+    if(ck) ck.checked = EX.selected.has(oi);
+  }
+  renderExFoot();
+}
+function renderExFoot(){
+  const n = EX.selected.size;
+  $('selInfo').innerHTML = n > 0
+    ? `<span class="selbadge">✓ Đã chọn ${n}</span><button class="clearbtn" id="btnClearSel" title="Bỏ chọn tất cả">🔄 LÀM MỚI</button>`
+    : '';
+  const clr = $('btnClearSel');
+  if(clr) clr.onclick = () => { EX.selected = new Set(); renderExTable(); renderExFoot(); };
+  $('btnApplyExcel').disabled = n === 0;
+}
+$('excelSearch').addEventListener('input', e => { EX.search = e.target.value; renderExTable(); });
+
+$('btnSaveCfg').onclick = () => {
+  if(!EX.data.length) return;
+  EX.saveStatus = 'saving';
+  masterLibrary = EX.data;
+  columnMapping = Object.assign({}, EX.mapping);
+  lsSet(LS_LIB, masterLibrary); lsSet(LS_MAP, columnMapping);
+  setTimeout(() => {
+    EX.saveStatus = 'saved';
+    const sb = $('btnSaveCfg');
+    sb.className = 'savecfg saved'; sb.innerHTML = '✓ ĐÃ LƯU';
+    setTimeout(() => { EX.saveStatus = 'idle'; sb.className = 'savecfg'; sb.innerHTML = '💾 LƯU CẤU HÌNH'; }, 3000);
+  }, 500);
+};
+
+$('btnApplyExcel').onclick = () => {
+  const selectedRows = EX.data.map((row, originalIndex) => ({ row, originalIndex }))
+    .filter(({ originalIndex }) => EX.selected.has(originalIndex));
+  if(!selectedRows.length){ alert('Vui lòng chọn ít nhất một sản phẩm.'); return; }
+
+  selectedRows.slice(0, 6).forEach(({ row, originalIndex }, idx) => {
+    const p = products[idx];
+    Object.assign(p, emptyProduct(idx + 1));
+    p.name = row[EX.mapping.name] ? String(row[EX.mapping.name]).trim() : '';
+    p.dosage = row[EX.mapping.dosage] ? String(row[EX.mapping.dosage]).trim() : '';
+    p.usage = row[EX.mapping.usage] ? String(row[EX.mapping.usage]).trim() : '';
+    p.listPrice = formatPriceString(row[EX.mapping.listPrice], row[EX.mapping.packaging]);
+    const dStr = EX.discounts[originalIndex] || '';
+    if(dStr !== ''){
+      const d = parseFloat(dStr.replace(',', '.')) || 0;
+      const listRaw = getNumericPrice(row[EX.mapping.listPrice]);
+      p.idecoPrice = formatPriceString(listRaw * (1 - d / 100), row[EX.mapping.packaging]);
+    }else{
+      p.idecoPrice = formatPriceString(row[EX.mapping.idecoPrice], row[EX.mapping.packaging]);
+    }
+    p.manufacturer = row[EX.mapping.manufacturer] ? String(row[EX.mapping.manufacturer]).trim() : '';
+  });
+
+  masterLibrary = EX.data;
+  columnMapping = Object.assign({}, EX.mapping);
+  lsSet(LS_LIB, masterLibrary); lsSet(LS_MAP, columnMapping);
+
+  activeTab = 1;
+  renderPTabs(); loadForm(); closeMask('excelMask');
+  toast('Đã nhập ' + Math.min(6, selectedRows.length) + ' sản phẩm vào các tab ✓');
+};
+
+/* ============================================================
+   TẠO PROMPT — Gemini AI (nếu có key) hoặc bộ máy nội bộ
+============================================================ */
+function aspectLabel(a){ return a === 'vertical' ? 'Dọc (Portrait 3:4)' : a === 'horizontal' ? 'Ngang (Landscape 16:9)' : 'Vuông (Square 1:1)'; }
+function aspectValue(a){ return a === 'vertical' ? '3:4' : a === 'horizontal' ? '16:9' : '1:1'; }
+
+function buildLocalPrompt(p){
+  const bgTones = ['tone màu trắng và xanh mint tinh khiết', 'tone màu trắng và cam pastel ấm áp', 'tone màu trắng và xanh dương y khoa hiện đại'];
+  const envs = [
+    'không gian nhà thuốc tây hiện đại, sang trọng với quầy kính sạch bóng và các kệ thuốc trắng tinh phía sau',
+    'phòng lab công nghệ cao với ánh sáng xanh nhẹ và các chi tiết kính - kim loại tinh tế',
+    'phông nền studio trừu tượng với các hình khối 3D mềm mại, ' + bgTones[Math.floor(Math.random()*bgTones.length)]
+  ];
+  const env = envs[Math.floor(Math.random()*envs.length)];
+  const lines = [];
+  lines.push(`Poster quảng cáo dược phẩm chuyên nghiệp, siêu thực (photorealistic), độ phân giải 8K, khổ ${aspectLabel(p.aspectRatio)}.`);
+  lines.push(`Trung tâm poster là hộp sản phẩm "${p.name}"${p.imageBase64 ? ' (dựng lại chính xác theo ảnh sản phẩm đính kèm, giữ nguyên mọi chữ và nhãn trên bao bì)' : ''} được dựng 3D chân thực, sắc nét, đặt ở vị trí nổi bật với ánh sáng studio khối (volumetric lighting) chiếu vào, đổ bóng mềm mại.`);
+  lines.push(`Phía trên poster là tiêu đề "${p.name}" cỡ chữ thật lớn, thiết kế font 3D nổi khối sang trọng, màu sắc hài hoà với bao bì sản phẩm.`);
+  if(p.idecoPrice) lines.push(`TÂM ĐIỂM LỚN NHẤT của poster là cụm chữ "GIÁ BÁN TỪ IDECO CHỈ CÒN ĐẾN: ${p.idecoPrice}" — thiết kế dạng chữ 3D phát sáng neon rực rỡ hoặc mạ vàng kim loại, đặt trong khung kính trong suốt lơ lửng có ruy băng lụa cao cấp, cực kỳ ấn tượng, thu hút ánh nhìn ngay lập tức.`);
+  if(p.listPrice) lines.push(`Bên cạnh, giá niêm yết "${p.listPrice}" hiển thị với kích thước nhỏ hơn đáng kể, font chữ thanh mảnh màu xám nhã nhặn để tương phản làm nổi bật giá IDECO.`);
+  if(p.dosage || p.usage) lines.push(`Thông tin phụ tinh gọn: ${[p.dosage, p.usage].filter(Boolean).join(' — ')}.`);
+  if(p.isETC) lines.push(`Góc trên bên trái poster BẮT BUỘC có khung chữ nhật màu đỏ đậm, bên trong là dòng chữ trắng in hoa đậm "THUỐC KÊ TOA".`);
+  if(p.manufacturer) lines.push(`Mép dưới cùng poster là dòng chữ nhỏ gọn, tinh tế: "Nhà sản xuất bởi: ${p.manufacturer}".`);
+  lines.push(`Nằm nổi bật gần đáy poster là dòng chữ màu đỏ tươi rực rỡ, font đậm cực kỳ rõ nét, dễ đọc: "Công ty  IDECO - Trân trọng báo giá -  Mobile 0938151422".`);
+  lines.push(`Bối cảnh: ${env}. Ánh sáng studio chuyên nghiệp, focus sắc nét vào hộp thuốc và giá tiền, hiệu ứng bokeh lung linh ở hậu cảnh, màu sắc rực rỡ hài hoà.`);
+  if(p.description) lines.push(`Yêu cầu thêm: ${p.description}.`);
+  return lines.join(' ');
+}
+
+async function generatePromptGemini(p){
+  const parts = [];
+  if(p.imageBase64 && p.mimeType){
+    parts.push({ inline_data:{ mime_type: p.mimeType, data: p.imageBase64.split(',')[1] } });
+  }
+  parts.push({ text: `
+Vai trò: Giám đốc sáng tạo (Creative Director) chuyên về quảng cáo dược phẩm.
+Nhiệm vụ: Viết một đoạn mô tả chi tiết (prompt) bằng TIẾNG VIỆT để tạo hình ảnh poster quảng cáo thuốc chuyên nghiệp, ấn tượng.
+
+DỮ LIỆU ĐẦU VÀO (HIỂN THỊ CHÍNH XÁC TRÊN ẢNH):
+- Tên sản phẩm (Title 1): "${p.name}"
+- Giá niêm yết (Title 2): "${p.listPrice}"
+- GIÁ IDECO (Title 3 - QUAN TRỌNG NHẤT): "GIÁ BÁN TỪ IDECO CHỈ CÒN ĐẾN: ${p.idecoPrice}"
+- Nhà sản xuất (Title 4): "Nhà sản xuất bởi: ${p.manufacturer}"
+- Chi tiết: ${p.dosage} | ${p.usage}
+- Quy định: ${p.isETC ? 'THUỐC KÊ TOA (BẮT BUỘC CÓ KHUNG ĐỎ)' : 'KHÔNG'}
+- Dòng chữ báo giá (BẮT BUỘC): "Công ty  IDECO - Trân trọng báo giá -  Mobile 0938151422"
+
+CẤU TRÚC HÌNH ẢNH YÊU CẦU:
+1. NHẬN DIỆN THƯƠNG HIỆU: Dựa trên ảnh sản phẩm đính kèm (nếu có), hãy mô tả hộp thuốc 3D chân thực, rõ nét ở vị trí trung tâm hoặc góc đẹp. Tiêu đề "${p.name}" phải thật lớn, thiết kế font chữ 3D nổi bật, sang trọng ở phía trên.
+2. TÂM ĐIỂM (GIÁ IDECO): Toàn bộ cụm chữ "GIÁ BÁN TỪ IDECO CHỈ CÒN ĐẾN: ${p.idecoPrice}" phải là điểm nhấn LỚN NHẤT, RỰC RỠ NHẤT của poster. Hãy mô tả nó được thiết kế dạng chữ 3D phát sáng (neon) hoặc mạ vàng kim loại, đặt trong một khung kính trong suốt hoặc ruy băng lụa cao cấp lơ lửng. Nó phải cực kỳ ấn tượng và thu hút mắt nhìn ngay lập tức.
+3. SO SÁNH GIÁ: Giá niêm yết "${p.listPrice}" đặt cạnh bên hoặc phía dưới, kích thước nhỏ hơn đáng kể, font chữ thanh mảnh, màu sắc nhã nhặn để tạo sự tương phản làm nổi bật giá IDECO.
+4. NHÃN BẮT BUỘC: ${p.isETC ? 'Góc trên bên trái poster PHẢI CÓ một khung hình chữ nhật màu đỏ đậm, bên trong là chữ trắng in hoa đậm "THUỐC KÊ TOA".' : ''}
+5. CHÂN TRANG: Dòng chữ "Nhà sản xuất bởi: ${p.manufacturer}" đặt nhỏ gọn, tinh tế ở mép dưới cùng của poster. Đặc biệt, nằm nổi bật ở gần đáy poster (ngay dưới hoặc phía trên dòng nhà sản xuất) là dòng chữ màu đỏ đậm/đỏ tươi rực rỡ và cực kỳ rõ nét: "Công ty  IDECO - Trân trọng báo giá -  Mobile 0938151422". Hãy mô tả chi tiết dòng chữ này có màu đỏ nổi bật, font chữ dễ đọc để khách hàng nhìn thấy rõ ràng.
+
+BỐI CẢNH NGHỆ THUẬT:
+- Môi trường: Nhà thuốc tây hiện đại, sang trọng với quầy kính sạch sẽ, hoặc phòng lab công nghệ cao, hoặc phông nền studio trừu tượng với các hình khối 3D mềm mại (tone màu trắng/xanh mint/cam pastel tùy theo màu hộp thuốc).
+- Ánh sáng: Ánh sáng studio khối (volumetric lighting), đổ bóng mềm mại, focus sắc nét vào hộp thuốc và giá tiền, hiệu ứng bokeh lung linh ở hậu cảnh.
+- Chất lượng: Độ phân giải 8k, siêu thực (photorealistic), chi tiết sắc sảo.
+- Khổ ảnh: ${aspectLabel(p.aspectRatio)}.
+${p.description ? '- Yêu cầu thêm từ người dùng: ' + p.description : ''}
+
+YÊU CẦU ĐẦU RA: Chỉ trả về đoạn văn mô tả (prompt) hoàn chỉnh bằng TIẾNG VIỆT. Không thêm lời chào, không thêm giải thích.` });
+
+  const r = await fetch(GEMINI_BASE + 'gemini-2.5-flash:generateContent?key=' + GEMINI_API_KEY, {
+    method:'POST', headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({ contents:[{ parts }] })
+  });
+  const d = await r.json();
+  if(d.error) throw new Error(d.error.message || 'Lỗi Gemini API');
+  const txt = (d?.candidates?.[0]?.content?.parts || []).map(x => x.text || '').join('').trim();
+  if(!txt) throw new Error('Không thể tạo prompt.');
+  return txt;
+}
+
+$('btnGenPrompts').onclick = async () => {
+  if(genBusy) return;
+  const todo = products.filter(p => p.name.trim());
+  if(!todo.length){ toast('Vui lòng nhập Tên sản phẩm cho ít nhất 1 tab.', true); return; }
+  genBusy = true;
+  $('btnGenPrompts').disabled = true;
+  $('btnGenPrompts').innerHTML = '<span class="spin">⏳</span> Đang Thiết Kế Prompt...';
+
+  todo.forEach(p => { const r = results.find(x => x.id === p.id); r.status = 'loading'; r.prompt = ''; r.imageUrl = null; });
+  renderResults();
+
+  for(const p of todo){
+    const r = results.find(x => x.id === p.id);
+    try{
+      let prompt;
+      if(GEMINI_API_KEY){
+        prompt = await generatePromptGemini(p);
+        // Nghỉ 3 giây giữa các request để tránh bị Google chặn (Rate Limit) — như bản gốc
+        await new Promise(res => setTimeout(res, 3000));
+      }else{
+        prompt = buildLocalPrompt(p);
+        await new Promise(res => setTimeout(res, 250));
+      }
+      r.prompt = prompt; r.status = 'success';
+      savePromptHistory(p.name, prompt);
+    }catch(e){
+      let m = String(e.message || e);
+      if(m.includes('429') || /quota exceeded|RESOURCE_EXHAUSTED/i.test(m))
+        m = 'Lỗi 429: Vượt quá giới hạn API miễn phí của Google. Vui lòng đợi 1 phút rồi thử lại.';
+      r.prompt = m; r.status = 'error';
+    }
+    renderResults();
+  }
+  genBusy = false;
+  $('btnGenPrompts').disabled = false;
+  $('btnGenPrompts').innerHTML = '✨ Tạo 6 Prompt Chuyên Nghiệp';
+  toast('Hoàn tất tạo prompt ✓ Bấm TẠO ẢNH ở từng kết quả.');
+};
+
+/* ===== Render kết quả (như ResultDisplay gốc + nút TẠO ẢNH Kie.ai) ===== */
+function renderResults(){
+  const hasResults = results.some(r => r.status === 'success' || r.status === 'error' || r.status === 'loading');
+  if(!hasResults){
+    $('resultsWrap').innerHTML = `<div class="res-empty">
+      <div class="circ">⌨️</div>
+      <p class="t1">Trình Tạo Prompt Thông Minh</p>
+      <p class="t2">Nhập thông tin cho 6 sản phẩm, upload ảnh thật, và AI sẽ viết 6 prompt chuẩn xác để bạn tạo poster — sau đó bấm TẠO ẢNH ngay tại đây (GPT-Image-2 · Kie.ai).</p>
+    </div>`;
+    return;
+  }
+  let html = `<div class="reshead"><h2>✨ Kết Quả Prompts</h2><span class="ready">Sẵn sàng để copy</span></div>`;
+  html += results.map(r => {
+    const p = products.find(x => x.id === r.id);
+    if(r.status === 'pending') return '';
+    if(r.status === 'loading') return `<div class="skelcard">
+      <div class="skel" style="height:15px;width:26%;margin-bottom:14px"></div>
+      <div class="skel" style="height:11px;margin-bottom:8px"></div>
+      <div class="skel" style="height:11px;margin-bottom:8px"></div>
+      <div class="skel" style="height:11px;width:82%"></div></div>`;
+    if(r.status === 'error') return `<div class="ritem err"><div class="errbox">
+      <span class="em">⚠️</span>
+      <div style="overflow:hidden;width:100%">
+        <div class="tt">Lỗi Tạo Prompt (SP ${r.id})</div>
+        <div class="tx">${esc(r.prompt)}</div>
+      </div></div></div>`;
+    return `<div class="ritem">
+      <div class="rithead">
+        <span class="lft"><span class="numball">${r.id}</span> Prompt Sản phẩm ${r.id}${p.name ? ' · ' + esc(p.name) : ''}</span>
+        <button class="cbtn" data-copy="${r.id}">📋 Sao chép</button>
+      </div>
+      <div class="term"><textarea data-rp="${r.id}" spellcheck="false">${esc(r.prompt)}</textarea></div>
+      <div class="imgtools" style="border-bottom:1px dashed var(--line)">
+        <span style="opacity:.5">🔗</span>
+        <input type="text" data-refin="${r.id}" placeholder="Dán link ảnh tham chiếu (URL) rồi bấm Tải ảnh — có thể thêm nhiều link" style="flex:1;min-width:170px;font-size:12px;padding:7px 10px">
+        <button class="cbtn" data-refload="${r.id}">⬇ Tải ảnh</button>
+      </div>
+      ${(p.imageBase64 || r.refUrls.length) ? `<div class="imgtools" style="border-top:none;padding-top:6px">
+        <span class="hint" style="font-weight:700">Ảnh tham chiếu khi tạo (${(p.imageBase64 ? 1 : 0) + r.refUrls.length}/5):</span>
+        <div class="refthumbs" style="margin-top:0">
+          ${p.imageBase64 ? `<div class="th" title="Ảnh sản phẩm đính kèm (SP ${r.id})"><img src="${p.imageBase64}"><span style="position:absolute;left:0;bottom:0;right:0;background:rgba(5,150,105,.85);color:#fff;font-size:8.5px;font-weight:800;text-align:center;padding:1px 0">ĐÍNH KÈM</span></div>` : ''}
+          ${r.refUrls.map((u, i) => `<div class="th" title="${esc(u)}"><img src="${esc(u)}" onerror="this.parentNode.style.borderColor='#dc2626';this.alt='lỗi link'"><button class="x" data-refdel="${r.id}:${i}">✕</button></div>`).join('')}
+        </div>
+      </div>` : ''}
+      <div class="imgtools">
+        <button class="cbtn red" data-genimg="${r.id}" ${r.imgBusy ? 'disabled' : ''}>${r.imgBusy ? '<span class="spin">⏳</span> ĐANG TẠO...' : '🎨 TẠO ẢNH' + ((p.imageBase64 || r.refUrls.length) ? ' (kèm ' + ((p.imageBase64 ? 1 : 0) + r.refUrls.length) + ' ảnh mẫu)' : '')}</button>
+        <span class="hint mono">${aspectValue(p.aspectRatio)}</span>
+        <select data-res="${r.id}">
+          <option value="1K"${(r.res||'1K')==='1K'?' selected':''}>1K</option>
+          <option value="2K"${r.res==='2K'?' selected':''}>2K</option>
+          <option value="4K"${r.res==='4K'?' selected':''}>4K</option>
+        </select>
+      </div>
+      <div class="prog" id="prog${r.id}"><i></i></div>
+      <div class="pstate mono" id="pstate${r.id}"></div>
+      ${r.imageUrl ? `<div class="rimg"><img src="${esc(r.imageUrl)}" data-lb="${esc(r.imageUrl)}"></div>
+        <div class="imgtools" style="border-top:none;padding-top:0"><button class="cbtn" data-dl="${esc(r.imageUrl)}">⬇ Tải ảnh về</button></div>` : ''}
+    </div>`;
+  }).join('');
+  $('resultsWrap').innerHTML = html;
+
+  $('resultsWrap').querySelectorAll('[data-rp]').forEach(ta => ta.addEventListener('input', () => {
+    results.find(x => x.id === +ta.dataset.rp).prompt = ta.value;
+  }));
+  $('resultsWrap').querySelectorAll('[data-res]').forEach(sel => sel.addEventListener('change', () => {
+    results.find(x => x.id === +sel.dataset.res).res = sel.value;
+  }));
+  $('resultsWrap').querySelectorAll('[data-refload]').forEach(b => b.onclick = () => addResultRef(+b.dataset.refload));
+  $('resultsWrap').querySelectorAll('[data-refin]').forEach(inp => inp.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){ e.preventDefault(); addResultRef(+inp.dataset.refin); }
+  }));
+  $('resultsWrap').querySelectorAll('[data-refdel]').forEach(b => b.onclick = () => {
+    const [rid, idx] = b.dataset.refdel.split(':').map(Number);
+    const r = results.find(x => x.id === rid);
+    r.refUrls.splice(idx, 1);
+    renderResults();
+  });
+  $('resultsWrap').querySelectorAll('[data-copy]').forEach(b => b.onclick = () => copyText(results.find(x => x.id === +b.dataset.copy).prompt, b));
+  $('resultsWrap').querySelectorAll('[data-genimg]').forEach(b => b.onclick = () => generateProductImage(+b.dataset.genimg));
+  $('resultsWrap').querySelectorAll('[data-lb]').forEach(im => im.onclick = () => { $('lbImg').src = im.dataset.lb; $('lb').classList.add('show'); });
+  $('resultsWrap').querySelectorAll('[data-dl]').forEach(b => b.onclick = () => downloadImg(b.dataset.dl));
+}
+
+/* Thêm link ảnh tham chiếu cho từng prompt sản phẩm — hỗ trợ nhiều link cách nhau dấu phẩy */
+function addResultRef(rid){
+  const r = results.find(x => x.id === rid);
+  const p = products.find(x => x.id === rid);
+  const inp = $('resultsWrap').querySelector(`[data-refin="${rid}"]`);
+  if(!inp) return;
+  const urls = inp.value.split(',').map(s => s.trim()).filter(Boolean);
+  if(!urls.length){ toast('Vui lòng dán link ảnh (URL) trước.', true); return; }
+  const bad = urls.find(u => !/^https?:\/\//i.test(u));
+  if(bad){ toast('Link ảnh không hợp lệ: ' + bad.slice(0, 40), true); return; }
+  const max = 5 - (p.imageBase64 ? 1 : 0);
+  let added = 0;
+  for(const u of urls){
+    if(r.refUrls.includes(u)) continue;
+    if(r.refUrls.length >= max){ toast('Tối đa 5 ảnh tham chiếu (kể cả ảnh đính kèm).', true); break; }
+    r.refUrls.push(u); added++;
+  }
+  renderResults();
+  if(added) toast('Đã thêm ' + added + ' ảnh tham chiếu ✓');
+}
+
+/* ============================================================
+   KIE.AI — UPLOAD ẢNH + TẠO ẢNH GPT-IMAGE-2
+============================================================ */
+async function kieUploadBase64(dataUrl, name){
+  const r = await fetch(KIE_UPLOAD, {
+    method:'POST', headers: kieHeaders(),
+    body: JSON.stringify({ base64Data: dataUrl, uploadPath:'ideco/products', fileName: name })
+  });
+  const d = await r.json();
+  const url = d?.data?.downloadUrl || d?.data?.fileUrl;
+  if(!d?.success && d?.code !== 200) throw new Error(d?.msg || 'Upload ảnh lên Kie.ai thất bại');
+  if(!url) throw new Error('Upload xong nhưng không nhận được link ảnh');
+  return url;
+}
+async function kieCreateTask(model, input){
+  const r = await fetch(KIE_BASE + '/api/v1/jobs/createTask', {
+    method:'POST', headers: kieHeaders(),
+    body: JSON.stringify({ model, input })
+  });
+  const d = await r.json();
+  if(d.code === 401) throw new Error('API key Kie.ai không hợp lệ hoặc hết hạn (401)');
+  if(d.code === 402) throw new Error('Tài khoản hết credits — nạp thêm trên kie.ai (402)');
+  if(d.code !== 200 || !d?.data?.taskId) throw new Error(d.msg || ('Lỗi tạo tác vụ (mã ' + d.code + ')'));
+  return d.data.taskId;
+}
+function kiePoll(taskId, onProgress){
+  return new Promise((resolve, reject) => {
+    let tries = 0;
+    const timer = setInterval(async () => {
+      tries++;
+      if(tries > 100){ clearInterval(timer); reject(new Error('Quá thời gian chờ (5 phút). Kiểm tra lịch sử trên kie.ai.')); return; }
+      try{
+        const r = await fetch(KIE_BASE + '/api/v1/jobs/recordInfo?taskId=' + encodeURIComponent(taskId), { headers: kieHeaders() });
+        const d = await r.json();
+        const data = d.data || {};
+        if(data.state === 'success'){
+          clearInterval(timer);
+          let urls = [];
+          try{ urls = (JSON.parse(data.resultJson || '{}').resultUrls) || []; }catch(_){}
+          if(!urls.length){ reject(new Error('Tác vụ xong nhưng không nhận được link ảnh')); return; }
+          resolve({ urls, credits: data.creditsConsumed });
+        }else if(data.state === 'fail'){
+          clearInterval(timer);
+          reject(new Error('Tạo ảnh thất bại: ' + (data.failMsg || data.failCode || 'không rõ nguyên nhân')));
+        }else{
+          const pct = Math.min(90, 10 + (Number(data.progress) || tries * 2));
+          const labels = { waiting:'đang chờ xử lý', queuing:'đang xếp hàng', generating:'đang vẽ ảnh 🎨' };
+          onProgress((labels[data.state] || data.state || 'đang xử lý') + '...', pct);
+        }
+      }catch(_){ /* lỗi mạng tạm thời — thử lại vòng sau */ }
+    }, 3000);
+  });
+}
+
+async function generateProductImage(id){
+  const r = results.find(x => x.id === id);
+  const p = products.find(x => x.id === id);
+  if(r.imgBusy) return;
+  if(!r.prompt.trim()){ toast('Chưa có prompt.', true); return; }
+  r.imgBusy = true;
+  renderResults();
+  const prog = $('prog' + id), state = $('pstate' + id);
+  const setP = (msg, pct) => { if(state){ state.textContent = msg; state.classList.add('show'); } if(prog){ prog.classList.add('show'); prog.firstElementChild.style.width = pct + '%'; } };
+
+  try{
+    const input = { prompt: r.prompt, aspect_ratio: aspectValue(p.aspectRatio), resolution: r.res || '1K' };
+    let model = 'gpt-image-2-text-to-image';
+    const inputUrls = [];
+    if(p.imageBase64){
+      setP('đang tải ảnh sản phẩm lên...', 5);
+      inputUrls.push(await kieUploadBase64(p.imageBase64, 'sp' + id + '_' + Date.now() + '.png'));
+    }
+    r.refUrls.forEach(u => { if(inputUrls.length < 5) inputUrls.push(u); });
+    if(inputUrls.length){
+      model = 'gpt-image-2-image-to-image';
+      input.input_urls = inputUrls;
+    }
+    setP('đang gửi yêu cầu...', 8);
+    const taskId = await kieCreateTask(model, input);
+    setP('đã vào hàng đợi · ' + taskId, 10);
+    const { urls, credits } = await kiePoll(taskId, setP);
+    r.imageUrl = urls[0];
+    r.imgBusy = false;
+    addToGallery(urls, r.prompt);
+    renderResults(); renderGallery(); refreshCredits();
+    toast('Đã tạo xong ' + urls.length + ' ảnh' + (credits ? ' · tốn ' + credits + ' credits' : '') + ' — nhớ tải về, link hết hạn sau 24h!');
+  }catch(e){
+    r.imgBusy = false;
+    renderResults();
+    toast(e.message === 'Failed to fetch' ? 'Không kết nối được Kie.ai — kiểm tra mạng/CORS' : e.message, true);
+  }
+}
+
+/* ============================================================
+   CHẾ ĐỘ TỰ DO (như app TAOANH cũ + upload ảnh mẫu từ máy)
+============================================================ */
+let freeMode = 't2i', freeBusy = false;
+let refUploaded = [];
+
+const CHIPS = [
+  ['Poster sản phẩm', 'Poster quảng cáo sản phẩm dược mỹ phẩm cao cấp, phông nền đỏ trắng thanh lịch, ánh sáng studio chuyên nghiệp, bố cục hiện đại'],
+  ['Banner khuyến mãi', 'Banner khuyến mãi ngành dược phẩm, thiết kế phẳng hiện đại, tông đỏ #ee3a23 và trắng, có khoảng trống để chèn chữ'],
+  ['Ảnh sản phẩm', 'Ảnh chụp sản phẩm mỹ phẩm trên nền đá cẩm thạch trắng, ánh sáng mềm tự nhiên, phong cách thương mại điện tử cao cấp'],
+  ['Infographic y dược', 'Hình minh họa infographic y dược, phong cách vector sạch sẽ, màu đỏ trắng xám, dễ đọc, chuyên nghiệp'],
+  ['Post mạng xã hội', 'Ảnh nền bài đăng mạng xã hội chúc mừng, tông ấm áp lễ hội, phong cách Việt Nam hiện đại'],
+  ['Dược sĩ Hàn Quốc & IDECO', 'Tạo poster chuyên nghiệp, đẹp với nội dung: một nữ dược sĩ Hàn Quốc xinh đẹp mặc áo khoác trắng in logo đỏ trên túi áo "IDECO" đứng trong quầy thuốc, tay cầm hộp sản phẩm, kế bên là tấm bảng to viền inox đẹp không nội dung phía trên poster và có khổ rộng bằng poster, dưới bàn quầy thuốc là bình hoa thủy tinh nhỏ đẹp, với tấm thiệp trắng không nội dung. Phong cách poster sáng sủa, chi tiết, chân thật, khổ poster 3:4'],
+  ['Dược sĩ Nam & IDECO', 'Tạo một poster quảng cáo đẹp chuyên nghiệp, màu sắc sáng sủa với một dược sĩ Nam Hàn Quốc đẹp trai mặc áo khoác trắng in logo đỏ "IDECO" trên túi áo ngồi tại bàn trong quầy thuốc, với hộp thuốc (lấy ảnh gốc đính kèm) để trên bàn kế bên tấm thiệp trắng, bình hoa thủy tinh đẹp, trên tường quầy thuốc là tấm bảng hiệu to kết khổ dài poster màu trắng để trống, có viền gỗ đẹp.'],
+  ['Packshot sản phẩm', 'Tạo ảnh Packshot 3D sản phẩm đẹp theo ảnh gốc đính kèm, rõ, chi tiết, ảnh sản phẩm to như chụp cận cảnh, ấn tượng, trên nền đẹp, sáng tạo hiệu ứng ánh sáng tương phản để thu hút, phía dưới ảnh là banner trắng dài ngang khổ ảnh để điền thông tin']
+];
+$('chips').innerHTML = CHIPS.map(([l], i) => `<span class="chip" data-i="${i}">${l}</span>`).join('');
+$('chips').querySelectorAll('.chip').forEach(c => c.onclick = () => {
+  $('chips').querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+  c.classList.add('on');
+  $('freePrompt').value = CHIPS[+c.dataset.i][1];
+  $('freePrompt').focus();
+});
+
+$('modeT2I').onclick = () => setFreeMode('t2i');
+$('modeI2I').onclick = () => setFreeMode('i2i');
+function setFreeMode(m){
+  freeMode = m;
+  $('modeT2I').classList.toggle('on', m === 't2i');
+  $('modeI2I').classList.toggle('on', m === 'i2i');
+  $('refBox').style.display = m === 'i2i' ? 'block' : 'none';
+}
+
+$('btnRefUpload').onclick = () => $('refFile').click();
+$('refFile').onchange = async e => {
+  const files = [...e.target.files].slice(0, 5 - refUploaded.length);
+  e.target.value = '';
+  for(const f of files){
+    if(f.size > 5*1024*1024){ toast(f.name + ' quá 5MB — bỏ qua', true); continue; }
+    try{
+      toast('Đang tải ' + f.name + ' lên Kie.ai...');
+      const dataUrl = await new Promise((res, rej) => { const rd = new FileReader(); rd.onloadend = () => res(rd.result); rd.onerror = rej; rd.readAsDataURL(f); });
+      const url = await kieUploadBase64(dataUrl, 'ref_' + Date.now() + '_' + f.name.replace(/[^a-zA-Z0-9._-]/g, ''));
+      refUploaded.push({ name: f.name, url, thumb: dataUrl });
+      renderRefThumbs();
+      toast('Đã tải lên ✓');
+    }catch(err){ toast('Lỗi tải ảnh: ' + err.message, true); }
+  }
+};
+function renderRefThumbs(){
+  $('refThumbs').innerHTML = refUploaded.map((r, i) =>
+    `<div class="th"><img src="${r.thumb}" title="${esc(r.name)}"><button class="x" data-i="${i}">✕</button></div>`).join('');
+  $('refThumbs').querySelectorAll('.x').forEach(b => b.onclick = () => { refUploaded.splice(+b.dataset.i, 1); renderRefThumbs(); });
+}
+
+$('btnFreeGo').onclick = async () => {
+  if(freeBusy) return;
+  const prompt = $('freePrompt').value.trim();
+  if(!prompt){ toast('Vui lòng nhập mô tả ảnh', true); $('freePrompt').focus(); return; }
+
+  const input = { prompt, aspect_ratio: $('freeAspect').value, resolution: $('freeRes').value };
+  let model = 'gpt-image-2-text-to-image';
+  if(freeMode === 'i2i'){
+    const urls = $('refInput').value.split(',').map(s => s.trim()).filter(Boolean);
+    const all = [...refUploaded.map(r => r.url), ...urls].slice(0, 5);
+    if(!all.length){ toast('Chế độ sửa ảnh cần ít nhất 1 ảnh mẫu (link hoặc tải lên)', true); return; }
+    const bad = all.find(u => !/^https?:\/\//i.test(u));
+    if(bad){ toast('Link ảnh không hợp lệ: ' + bad.slice(0, 40), true); return; }
+    model = 'gpt-image-2-image-to-image';
+    input.input_urls = all;
+  }
+
+  freeBusy = true;
+  $('btnFreeGo').disabled = true; $('btnFreeGo').textContent = '⏳ ĐANG TẠO...';
+  $('freeEmpty').style.display = 'none';
+  $('freeJob').style.display = 'block';
+  $('freeJobPrompt').textContent = prompt.slice(0, 120);
+  const setP = (msg, pct) => { $('freeJobState').textContent = msg; $('freeJobBar').style.width = pct + '%'; };
+  setP('đang gửi yêu cầu...', 5);
+
+  try{
+    const taskId = await kieCreateTask(model, input);
+    setP('đã vào hàng đợi · ' + taskId, 10);
+    const { urls, credits } = await kiePoll(taskId, setP);
+    setP('hoàn tất ✓', 100);
+    setTimeout(() => $('freeJob').style.display = 'none', 1200);
+    $('freeResult').innerHTML = urls.map(u =>
+      `<div class="rimg" style="margin:12px 0 0"><img src="${esc(u)}" data-lb="${esc(u)}"></div>
+       <div style="margin-top:8px"><button class="cbtn" data-dl="${esc(u)}">⬇ Tải ảnh về</button></div>`).join('');
+    $('freeResult').querySelectorAll('[data-lb]').forEach(im => im.onclick = () => { $('lbImg').src = im.dataset.lb; $('lb').classList.add('show'); });
+    $('freeResult').querySelectorAll('[data-dl]').forEach(b => b.onclick = () => downloadImg(b.dataset.dl));
+    addToGallery(urls, prompt);
+    renderGallery(); refreshCredits();
+    toast('Đã tạo xong ' + urls.length + ' ảnh' + (credits ? ' · tốn ' + credits + ' credits' : '') + ' — nhớ tải về, link hết hạn sau 24h!');
+  }catch(e){
+    $('freeJob').style.display = 'none';
+    toast(e.message === 'Failed to fetch' ? 'Không kết nối được api.kie.ai — kiểm tra mạng hoặc trình duyệt chặn CORS' : e.message, true);
+  }finally{
+    freeBusy = false;
+    $('btnFreeGo').disabled = false; $('btnFreeGo').textContent = '🎨 TẠO ẢNH';
+  }
+};
+
+/* ============================================================
+   THƯ VIỆN ẢNH + LỊCH SỬ PROMPT
+============================================================ */
+function addToGallery(urls, prompt){
+  const hist = lsGet(LS_HIST_IMG, []);
+  const now = Date.now();
+  urls.forEach(u => hist.unshift({ url:u, prompt, t:now }));
+  lsSet(LS_HIST_IMG, hist.slice(0, 60));
+}
+function renderGallery(){
+  const hist = lsGet(LS_HIST_IMG, []);
+  $('galEmpty').style.display = hist.length ? 'none' : 'block';
+  $('galCnt').textContent = hist.length ? hist.length + ' ảnh (lưu trên máy này · link hết hạn 24h)' : '';
+  $('gallery').innerHTML = hist.map((item, i) => {
+    const d = new Date(item.t);
+    const time = d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit'});
+    return `<div class="gcard">
+      <img loading="lazy" src="${esc(item.url)}" data-lb="${esc(item.url)}" onerror="this.alt='Link ảnh đã hết hạn (24h)'">
+      <div class="meta"><div class="p">${esc(item.prompt)}</div><div class="t mono">${time}</div></div>
+      <div class="acts">
+        <button data-gdl="${i}">⬇ Tải</button>
+        <button data-gre="${i}">↻ Tạo lại</button>
+        <button data-gdel="${i}" style="flex:0 0 40px">🗑</button>
+      </div></div>`;
+  }).join('');
+  $('gallery').querySelectorAll('[data-lb]').forEach(im => im.onclick = () => { $('lbImg').src = im.dataset.lb; $('lb').classList.add('show'); });
+  $('gallery').querySelectorAll('[data-gdl]').forEach(b => b.onclick = () => downloadImg(lsGet(LS_HIST_IMG, [])[+b.dataset.gdl].url));
+  $('gallery').querySelectorAll('[data-gre]').forEach(b => b.onclick = () => {
+    const it = lsGet(LS_HIST_IMG, [])[+b.dataset.gre];
+    switchMode('free'); $('freePrompt').value = it.prompt;
+    window.scrollTo({top:0, behavior:'smooth'});
+    toast('Đã nạp lại mô tả — bấm TẠO ẢNH');
+  });
+  $('gallery').querySelectorAll('[data-gdel]').forEach(b => b.onclick = () => {
+    const h = lsGet(LS_HIST_IMG, []); h.splice(+b.dataset.gdel, 1); lsSet(LS_HIST_IMG, h); renderGallery();
+  });
+}
+async function downloadImg(url){
+  toast('Đang tải ảnh...');
+  try{
+    const r = await fetch(url);
+    if(!r.ok) throw 0;
+    const blob = await r.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'IDECO_AI_' + Date.now() + '.png';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }catch(_){ window.open(url, '_blank'); }
+}
+
+/* Lịch sử prompt — với Xem/Ẩn prompt như PromptHistoryModal gốc */
+let expandedHistId = null;
+function savePromptHistory(name, prompt){
+  const h = lsGet(LS_HIST_PR, []);
+  h.unshift({ id: Date.now().toString() + Math.random().toString(36).substring(2, 9), productName:name, prompt, timestamp: Date.now() });
+  lsSet(LS_HIST_PR, h);
+}
+$('btnHistory').onclick = () => { expandedHistId = null; renderHist(); openMask('histMask'); };
+function renderHist(){
+  const h = lsGet(LS_HIST_PR, []);
+  $('histBody').innerHTML = h.length ? h.map(item => {
+    const d = new Date(item.timestamp);
+    const dt = d.toLocaleString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    const open = expandedHistId === item.id;
+    return `<div class="hcard">
+      <div class="hchead">
+        <div><h4>${esc(item.productName || 'Sản phẩm không tên')}</h4><div class="dt">${dt}</div></div>
+        <div class="hbtns">
+          <button class="cbtn" style="color:var(--indigo);border-color:#c7d2fe" data-hx="${item.id}">${open ? 'Ẩn prompt' : 'Xem prompt'}</button>
+          <button class="cbtn" data-hc="${item.id}">📋 Sao chép</button>
+          <button class="cbtn red" data-hu="${item.id}">🎨 Dùng để tạo ảnh</button>
+          <button class="cbtn" style="color:var(--bad);border-color:#fecaca" data-hd="${item.id}" title="Xóa prompt này">🗑 Xóa</button>
+        </div>
+      </div>
+      ${open ? `<div class="hterm custom-scroll"><pre>${esc(item.prompt)}</pre></div>` : ''}
+    </div>`;
+  }).join('') : `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:#94a3b8">
+      <div style="font-size:56px;opacity:.25;margin-bottom:14px">🕘</div>
+      <p style="font-size:16px;font-weight:600">Chưa có prompt nào được lưu.</p>
+      <p style="font-size:13px;margin-top:8px">Các prompt tạo thành công sẽ tự động xuất hiện ở đây.</p>
+    </div>`;
+  $('histBody').querySelectorAll('[data-hx]').forEach(b => b.onclick = () => {
+    expandedHistId = expandedHistId === b.dataset.hx ? null : b.dataset.hx; renderHist();
+  });
+  $('histBody').querySelectorAll('[data-hc]').forEach(b => b.onclick = () => copyText(lsGet(LS_HIST_PR, []).find(x => x.id === b.dataset.hc).prompt, b));
+  $('histBody').querySelectorAll('[data-hu]').forEach(b => b.onclick = () => {
+    const it = lsGet(LS_HIST_PR, []).find(x => x.id === b.dataset.hu);
+    closeMask('histMask'); switchMode('free');
+    $('freePrompt').value = it.prompt;
+    toast('Đã nạp prompt — chọn khung ảnh rồi bấm TẠO ẢNH');
+  });
+  $('histBody').querySelectorAll('[data-hd]').forEach(b => b.onclick = () => {
+    lsSet(LS_HIST_PR, lsGet(LS_HIST_PR, []).filter(x => x.id !== b.dataset.hd)); renderHist();
+  });
+}
+
+/* ============================================================
+   CREDITS · MODE TABS · MODAL · KHỞI ĐỘNG
+============================================================ */
+async function refreshCredits(){
+  try{
+    const r = await fetch(KIE_BASE + '/api/v1/chat/credit', { headers: kieHeaders() });
+    const d = await r.json();
+    if(d.code === 200){ $('creditVal').textContent = Number(d.data).toLocaleString('vi-VN'); $('cdot').className = 'dot'; }
+    else{ $('creditVal').textContent = 'lỗi key'; $('cdot').className = 'dot bad'; }
+  }catch(_){ $('creditVal').textContent = 'mất kết nối'; $('cdot').className = 'dot bad'; }
+}
+$('btnCredit').onclick = refreshCredits;
+
+function switchMode(m){
+  $('viewProduct').style.display = m === 'product' ? 'block' : 'none';
+  $('viewFree').style.display = m === 'free' ? 'block' : 'none';
+  $('tabProduct').classList.toggle('on', m === 'product');
+  $('tabFree').classList.toggle('on', m === 'free');
+}
+$('tabProduct').onclick = () => switchMode('product');
+$('tabFree').onclick = () => switchMode('free');
+
+function openMask(id){ $(id).classList.add('show'); }
+function closeMask(id){ $(id).classList.remove('show'); }
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => closeMask(b.dataset.close));
+document.querySelectorAll('.mask').forEach(m => m.addEventListener('click', e => { if(e.target === m) m.classList.remove('show'); }));
+
+$('lb').onclick = () => $('lb').classList.remove('show');
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){ $('lb').classList.remove('show'); document.querySelectorAll('.mask').forEach(m => m.classList.remove('show')); }
+});
+
+renderPTabs(); loadForm(); renderResults(); renderGallery(); refreshCredits();
+</script>
+</body>
+</html>
