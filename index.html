@@ -356,7 +356,7 @@ table.xt input[type=checkbox]{width:19px;height:19px;accent-color:var(--em);curs
     <div class="logo">✒️</div>
     <div>
       <h1>Pharma Prompt AI <span>· IDECO</span></h1>
-      <div class="sub">Xử lý ảnh & tạo Prompt hàng loạt (6 SP) · Tạo ảnh GPT-Image-2 (Kie.ai) · dùng nội bộ</div>
+      <div class="sub">Ứng dụng AI tạo ảnh-báo giá sản phẩm chuyên nghiệp được phát triển bởi: M Triet -IDECO</div>
     </div>
   </div>
   <div class="topbtns">
@@ -365,6 +365,7 @@ table.xt input[type=checkbox]{width:19px;height:19px;accent-color:var(--em);curs
     </div>
     <button class="tbtn indigo" id="btnHistory">🕘 Lịch sử</button>
     <button class="tbtn green" id="btnExcel">📊 Excel</button>
+    <button class="tbtn" id="btnAdmin" title="Quản trị viên">⚙️</button>
   </div>
 </header>
 
@@ -665,6 +666,53 @@ table.xt input[type=checkbox]{width:19px;height:19px;accent-color:var(--em);curs
   </div>
 </div>
 
+<!-- ============ MODAL ADMIN ============ -->
+<div class="mask" id="adminMask">
+  <div class="modal" style="max-width:520px">
+    <div class="mhead">
+      <div class="mtitle"><span class="icbox indigo">⚙️</span> Quản Trị Tạo Ảnh</div>
+      <button class="xbtn" data-close="adminMask">✕</button>
+    </div>
+    <div class="mbody custom-scroll">
+      <!-- Đăng nhập admin -->
+      <div id="adminLogin">
+        <label class="lbl b">Mật khẩu quản trị</label>
+        <input type="password" id="adminPass" placeholder="Nhập mật khẩu admin..." autocomplete="off">
+        <div class="lockerr" id="adminErr" style="margin-top:8px"></div>
+        <button class="btn-go" id="adminGo" style="margin-top:4px">ĐĂNG NHẬP ADMIN</button>
+      </div>
+
+      <!-- Bảng điều khiển -->
+      <div id="adminPanel" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin-bottom:14px">
+          <div>
+            <div style="font-weight:800;font-size:14px">Cho phép tạo ảnh</div>
+            <div class="hint">Tắt để khóa toàn bộ nút TẠO ẢNH (cả 2 tab) — tiết kiệm credits</div>
+          </div>
+          <button class="sw" id="admEnable" style="width:52px;height:26px"></button>
+        </div>
+
+        <div style="background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px 15px;margin-bottom:14px">
+          <div style="font-weight:800;font-size:14px;margin-bottom:4px">Giới hạn ảnh tối đa / ngày</div>
+          <div class="hint" style="margin-bottom:8px">Nhập 0 = không giới hạn. Bộ đếm tự về 0 vào ngày mới.</div>
+          <input type="number" id="admLimit" min="0" placeholder="VD: 20" style="max-width:160px;font-weight:800;font-size:16px;text-align:center">
+        </div>
+
+        <div style="background:var(--indigo-soft);border:1px solid #c7d2fe;border-radius:11px;padding:13px 15px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <div>
+            <div style="font-weight:800;font-size:13px;color:var(--indigo-dark)">Đã tạo hôm nay: <span id="admUsed" class="mono" style="font-size:17px">0</span> ảnh</div>
+            <div class="hint" id="admSyncMode"></div>
+          </div>
+          <button class="cbtn" id="admResetUsage" style="color:var(--bad);border-color:#fecaca">🔄 Reset bộ đếm hôm nay</button>
+        </div>
+
+        <div class="lockerr" id="admMsg" style="color:var(--ok)"></div>
+        <button class="btn-go" id="admSave">💾 LƯU CÀI ĐẶT</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="lb" id="lb"><img id="lbImg" src="" alt=""></div>
 <div class="toast" id="toast"></div>
 
@@ -757,6 +805,16 @@ table.xt input[type=checkbox]{width:19px;height:19px;accent-color:var(--em);curs
 const KIE_API_KEY      = '3fb45067e29a8aabb5e6f182b9d7b8e4';  // Key Kie.ai — tạo ảnh GPT-Image-2
 const GEMINI_API_KEY   = '';                                   // (Tuỳ chọn) Dán key Google Gemini để tạo prompt bằng AI + tính năng "Tạo 3D". Để trống → app tự tạo prompt bằng bộ máy nội bộ, vẫn đầy đủ.
 const REMOVEBG_API_KEY = 'Fyd9mdnXCrjEMsxfkPujTZ8v';           // Key remover.bg — xóa nền ảnh
+
+/* ==== QUẢN TRỊ (ADMIN) ====
+   - Pass admin: minhtriet1973 (nút ⚙️ trên thanh tiêu đề)
+   - FIREBASE_DB_URL: dán link Firebase Realtime Database của công ty vào đây
+     (VD: 'https://ideco-xxxx-default-rtdb.asia-southeast1.firebasedatabase.app')
+     → cài đặt khóa/giới hạn + bộ đếm ảnh sẽ ÁP DỤNG CHUNG cho MỌI nhân viên, mọi máy.
+     Để trống '' → chỉ áp dụng riêng trên từng máy (localStorage). */
+const ADMIN_PASS      = 'minhtriet1973';
+const FIREBASE_DB_URL = 'https://thauam1-8ad89-default-rtdb.firebaseio.com';
+const CONTROL_PATH    = 'TAOANH_CONTROL';
 
 const KIE_BASE    = 'https://api.kie.ai';
 const KIE_UPLOAD  = 'https://kieai.redpandaai.co/api/file-base64-upload';
@@ -1562,6 +1620,130 @@ function addResultRef(rid){
 }
 
 /* ============================================================
+   BỘ ĐIỀU KHIỂN ADMIN — khóa/mở tạo ảnh + giới hạn ảnh/ngày
+   Lưu Firebase RTDB (áp dụng chung mọi máy) nếu có FIREBASE_DB_URL,
+   ngược lại lưu localStorage (riêng từng máy).
+============================================================ */
+const LS_CTRL_SET = 'ideco_ctrl_settings';
+const LS_CTRL_USE = 'ideco_ctrl_usage';
+const todayKey = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); };
+const useFB = () => !!FIREBASE_DB_URL;
+const fbUrl = path => FIREBASE_DB_URL.replace(/\/$/, '') + '/' + CONTROL_PATH + '/' + path + '.json';
+
+async function ctrlGetSettings(){
+  if(useFB()){
+    try{
+      const r = await fetch(fbUrl('settings'));
+      const d = await r.json();
+      if(d && typeof d === 'object') return { enabled: d.enabled !== false, dailyLimit: Number(d.dailyLimit) || 0 };
+    }catch(_){ /* mất mạng → cho phép để không chặn oan */ }
+    return { enabled: true, dailyLimit: 0 };
+  }
+  return Object.assign({ enabled: true, dailyLimit: 0 }, lsGet(LS_CTRL_SET, {}));
+}
+async function ctrlSetSettings(s){
+  if(useFB()){
+    const r = await fetch(fbUrl('settings'), { method:'PUT', body: JSON.stringify(s) });
+    if(!r.ok) throw new Error('Không ghi được lên Firebase (' + r.status + '). Kiểm tra link DB và rules.');
+  }else lsSet(LS_CTRL_SET, s);
+}
+async function ctrlGetUsage(){
+  const day = todayKey();
+  if(useFB()){
+    try{
+      const r = await fetch(fbUrl('usage/' + day));
+      const n = await r.json();
+      return Number(n) || 0;
+    }catch(_){ return 0; }
+  }
+  const u = lsGet(LS_CTRL_USE, {});
+  return Number(u[day]) || 0;
+}
+async function ctrlAddUsage(n){
+  const day = todayKey();
+  if(useFB()){
+    try{
+      const cur = await ctrlGetUsage();
+      await fetch(fbUrl('usage/' + day), { method:'PUT', body: JSON.stringify(cur + n) });
+    }catch(_){ }
+  }else{
+    const u = lsGet(LS_CTRL_USE, {});
+    u[day] = (Number(u[day]) || 0) + n;
+    lsSet(LS_CTRL_USE, u);
+  }
+}
+async function ctrlResetUsage(){
+  const day = todayKey();
+  if(useFB()) await fetch(fbUrl('usage/' + day), { method:'PUT', body: '0' });
+  else{ const u = lsGet(LS_CTRL_USE, {}); u[day] = 0; lsSet(LS_CTRL_USE, u); }
+}
+/* Chốt chặn trước khi tạo ảnh — kiểm tra tươi mỗi lần bấm */
+async function ctrlGate(){
+  const [s, used] = await Promise.all([ctrlGetSettings(), ctrlGetUsage()]);
+  if(!s.enabled) return { ok:false, msg:'⛔ Admin đã tạm KHÓA chức năng tạo ảnh. Vui lòng liên hệ quản trị viên.' };
+  if(s.dailyLimit > 0 && used >= s.dailyLimit)
+    return { ok:false, msg:'⛔ Đã đạt giới hạn ' + s.dailyLimit + ' ảnh/ngày (hôm nay: ' + used + '). Vui lòng quay lại vào ngày mai hoặc liên hệ admin.' };
+  return { ok:true };
+}
+
+/* ===== Giao diện Admin ===== */
+let admAuthed = false, admSettings = { enabled:true, dailyLimit:0 };
+$('btnAdmin').onclick = () => {
+  $('adminLogin').style.display = admAuthed ? 'none' : 'block';
+  $('adminPanel').style.display = admAuthed ? 'block' : 'none';
+  $('adminErr').textContent = ''; $('admMsg').textContent = '';
+  $('adminPass').value = '';
+  openMask('adminMask');
+  if(admAuthed) admLoadPanel();
+  else setTimeout(() => $('adminPass').focus(), 80);
+};
+function admTryLogin(){
+  if($('adminPass').value === ADMIN_PASS){
+    admAuthed = true;
+    $('adminLogin').style.display = 'none';
+    $('adminPanel').style.display = 'block';
+    admLoadPanel();
+  }else{
+    $('adminPass').value = '';
+    $('adminErr').textContent = 'Sai mật khẩu quản trị.';
+  }
+}
+$('adminGo').onclick = admTryLogin;
+$('adminPass').addEventListener('keydown', e => { if(e.key === 'Enter') admTryLogin(); });
+
+async function admLoadPanel(){
+  $('admSyncMode').textContent = useFB()
+    ? '🌐 Đồng bộ Firebase — áp dụng chung cho MỌI nhân viên, mọi máy'
+    : '💻 Chế độ máy này (chưa cấu hình FIREBASE_DB_URL trong code — chỉ áp dụng trên trình duyệt này)';
+  admSettings = await ctrlGetSettings();
+  $('admEnable').classList.toggle('on', admSettings.enabled);
+  $('admLimit').value = admSettings.dailyLimit || 0;
+  $('admUsed').textContent = await ctrlGetUsage();
+}
+$('admEnable').onclick = () => {
+  admSettings.enabled = !admSettings.enabled;
+  $('admEnable').classList.toggle('on', admSettings.enabled);
+};
+$('admSave').onclick = async () => {
+  admSettings.dailyLimit = Math.max(0, parseInt($('admLimit').value) || 0);
+  try{
+    await ctrlSetSettings({ enabled: admSettings.enabled, dailyLimit: admSettings.dailyLimit });
+    $('admMsg').style.color = 'var(--ok)';
+    $('admMsg').textContent = '✓ Đã lưu: ' + (admSettings.enabled ? 'MỞ tạo ảnh' : 'KHÓA tạo ảnh') +
+      (admSettings.dailyLimit ? ' · tối đa ' + admSettings.dailyLimit + ' ảnh/ngày' : ' · không giới hạn');
+    toast('Đã lưu cài đặt quản trị ✓');
+  }catch(e){
+    $('admMsg').style.color = 'var(--bad)';
+    $('admMsg').textContent = e.message;
+  }
+};
+$('admResetUsage').onclick = async () => {
+  await ctrlResetUsage();
+  $('admUsed').textContent = '0';
+  toast('Đã reset bộ đếm hôm nay ✓');
+};
+
+/* ============================================================
    KIE.AI — UPLOAD ẢNH + TẠO ẢNH GPT-IMAGE-2
 ============================================================ */
 async function kieUploadBase64(dataUrl, name){
@@ -1620,6 +1802,8 @@ async function generateProductImage(id){
   const p = products.find(x => x.id === id);
   if(r.imgBusy) return;
   if(!r.prompt.trim()){ toast('Chưa có prompt.', true); return; }
+  const gate = await ctrlGate();
+  if(!gate.ok){ toast(gate.msg, true); return; }
   r.imgBusy = true;
   renderResults();
   const prog = $('prog' + id), state = $('pstate' + id);
@@ -1644,6 +1828,7 @@ async function generateProductImage(id){
     const { urls, credits } = await kiePoll(taskId, setP);
     r.imageUrl = urls[0];
     r.imgBusy = false;
+    ctrlAddUsage(urls.length);
     addToGallery(urls, r.prompt);
     renderResults(); renderGallery(); refreshCredits();
     toast('Đã tạo xong ' + urls.length + ' ảnh' + (credits ? ' · tốn ' + credits + ' credits' : '') + ' — nhớ tải về, link hết hạn sau 24h!');
@@ -1713,6 +1898,8 @@ $('btnFreeGo').onclick = async () => {
   if(freeBusy) return;
   const prompt = $('freePrompt').value.trim();
   if(!prompt){ toast('Vui lòng nhập mô tả ảnh', true); $('freePrompt').focus(); return; }
+  const gate = await ctrlGate();
+  if(!gate.ok){ toast(gate.msg, true); return; }
 
   const input = { prompt, aspect_ratio: $('freeAspect').value, resolution: $('freeRes').value };
   let model = 'gpt-image-2-text-to-image';
@@ -1746,6 +1933,7 @@ $('btnFreeGo').onclick = async () => {
     $('freeResult').querySelectorAll('[data-lb]').forEach(im => im.onclick = () => { $('lbImg').src = im.dataset.lb; $('lb').classList.add('show'); });
     $('freeResult').querySelectorAll('[data-dl]').forEach(b => b.onclick = () => downloadImg(b.dataset.dl));
     addToGallery(urls, prompt);
+    ctrlAddUsage(urls.length);
     renderGallery(); refreshCredits();
     toast('Đã tạo xong ' + urls.length + ' ảnh' + (credits ? ' · tốn ' + credits + ' credits' : '') + ' — nhớ tải về, link hết hạn sau 24h!');
   }catch(e){
