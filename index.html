@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>IDECO · Pharma Prompt & Ảnh AI — GPT-Image-2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -320,6 +320,180 @@ table.xt input[type=checkbox]{width:19px;height:19px;accent-color:var(--em);curs
 .lockerr{font-size:12px;color:var(--bad);font-weight:700;min-height:17px;margin-bottom:6px}
 @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 .lockcard.shake{animation:shake .4s}
+
+/* ============================================================
+   ===== TỐI ƯU DI ĐỘNG (MOBILE-FIRST OVERRIDES ≤768px) =====
+   Giữ nguyên desktop — chỉ áp dụng trên màn hình nhỏ
+   ============================================================ */
+@media(max-width:768px){
+  html{-webkit-text-size-adjust:100%}
+  body{font-size:15px}
+
+  /* --- Input to rõ, 16px chống iOS tự zoom, dễ chạm --- */
+  input,select,textarea{font-size:16px !important;padding:13px 14px;border-radius:12px;min-height:50px}
+  textarea{min-height:110px;line-height:1.55}
+  select{background-position:right 12px center}
+  .lbl{font-size:14px;margin-bottom:6px}
+  .hint{font-size:13px;line-height:1.5}
+
+  /* --- Header gọn, cuộn ngang nút --- */
+  header.top{padding:10px 12px;gap:8px}
+  .brand{gap:9px}
+  .brand .logo{width:38px;height:38px;font-size:18px;border-radius:10px}
+  .brand h1{font-size:16px}
+  .brand .sub{display:none}
+  .topbtns{width:100%;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:2px;scrollbar-width:none}
+  .topbtns::-webkit-scrollbar{display:none}
+  .tbtn{padding:11px 15px;font-size:14px;min-height:46px;flex-shrink:0;border-radius:12px}
+  .credit{padding:10px 13px;font-size:13px;flex-shrink:0;min-height:46px}
+
+  /* --- Tab chế độ to rõ --- */
+  .modes{margin:12px auto 0;padding:0 10px;gap:6px}
+  .mtab{flex:1;padding:14px 8px;font-size:15px;text-align:center;border-radius:12px 12px 0 0}
+  .wrap{padding:0 10px;margin-bottom:100px}
+  .cols{gap:14px}
+
+  /* --- Thẻ form sản phẩm --- */
+  .pcard{border-radius:0 12px 12px 12px}
+  .ptabs{scrollbar-width:none}
+  .ptabs::-webkit-scrollbar{display:none}
+  .ptab{min-width:110px;padding:15px 10px;font-size:14.5px}
+  .pbody{padding:16px 14px}
+  .phead h2{font-size:17px}
+  .aspectbox{width:100%;justify-content:space-between}
+  .aspectbox button{flex:1;padding:11px 8px;font-size:13px;justify-content:center;min-height:44px}
+  .stack{gap:18px}
+  .g2{gap:16px}
+
+  /* --- Vùng upload --- */
+  .upcard{padding:14px 12px;border-radius:14px}
+  .uphead .t{font-size:14px}
+  .linkbtn{font-size:13px;padding:8px 4px;min-height:40px}
+  .updrop{padding:30px 0;font-size:14px}
+  .updrop .ic{font-size:38px}
+  .urlrow{gap:10px}
+  .urlrow input{font-size:16px !important;min-width:100%}
+  .mbtn{font-size:13.5px;padding:12px 15px;min-height:46px;border-radius:10px;flex:1;justify-content:center}
+  .imgrow{gap:12px}
+  .thumbwrap{width:110px;height:110px;border-radius:12px}
+
+  /* --- Field, gợi ý, switch --- */
+  .field .ic{font-size:16px;left:13px}
+  .field input{padding-left:40px}
+  .namewrap input{font-size:18px !important;padding:13px 14px 13px 42px}
+  .suggest li{padding:15px 16px;font-size:15px}
+  .etc{padding:9px 14px}
+  .etc .txt{font-size:11.5px}
+  .sw{width:50px;height:28px}
+  .sw::after{width:24px;height:24px}
+  .sw.on::after{left:24px}
+  .tplchips{gap:9px}
+  .tpl{padding:11px 16px;font-size:14px;min-height:44px}
+  .cp-badge{font-size:11px}
+
+  /* --- Nút tạo ảnh: nổi cố định đáy màn hình --- */
+  .pfoot{padding:12px 14px;position:sticky;bottom:0;z-index:40;box-shadow:0 -6px 20px rgba(15,23,42,.1)}
+  .btn-go{padding:17px;font-size:16px;border-radius:14px;min-height:56px}
+
+  /* --- Kết quả --- */
+  .reshead{top:0;position:static;padding:4px 0}
+  .reshead h2{font-size:17px}
+  .ready{font-size:12.5px;padding:6px 11px}
+  .res-empty{padding:36px 18px}
+  .ritem{border-radius:14px}
+  .rithead{padding:12px 13px}
+  .rithead .lft{font-size:14.5px}
+  .numball{width:28px;height:28px;font-size:13px}
+  .cbtn{padding:11px 13px;font-size:13px;min-height:44px;border-radius:9px}
+  .term{padding:12px 13px}
+  .term textarea{font-size:13.5px !important;min-height:120px}
+  .imgtools{padding:11px 12px;gap:8px}
+  .imgtools select{flex:1;min-height:44px;font-size:14px !important}
+  .imgtools .cbtn{flex:1;justify-content:center}
+  .rimg{margin:0 12px 12px}
+  .rimg img{max-height:none}
+  .errbox .tt{font-size:14.5px}
+  .errbox .tx{font-size:13.5px}
+
+  /* --- Chế độ tự do --- */
+  .freegrid{padding:14px 12px;gap:16px;border-radius:0 12px 12px 12px}
+  .row2{grid-template-columns:1fr;gap:14px}
+  .seg{gap:8px}
+  .seg button{min-width:74px;padding:13px 8px;font-size:14px;min-height:48px;border-radius:11px}
+  .chips{gap:9px}
+  .chip{padding:11px 16px;font-size:14px;min-height:44px}
+  .refthumbs .th{width:80px;height:80px}
+  .refthumbs .x{width:26px;height:26px;font-size:14px}
+  .sbtn{padding:12px 15px;font-size:14px;min-height:46px}
+
+  /* --- Thư viện ảnh: 2 cột --- */
+  .grid{grid-template-columns:1fr 1fr;gap:10px}
+  .galhead h2{font-size:16px}
+  .gcard .p{font-size:12.5px}
+  .gcard .t{font-size:11.5px}
+  .gcard .acts button{padding:11px 4px;font-size:12.5px;min-height:42px}
+
+  /* --- Modal: toàn màn hình dễ thao tác --- */
+  .mask{padding:0}
+  .modal.excel-s1,.modal.excel-s2,.modal.hist{max-width:100vw;width:100vw;height:100dvh;max-height:100dvh;border-radius:0}
+  .mhead{padding:12px 14px}
+  .mhead .mtitle{font-size:15.5px}
+  .xbtn{width:46px;height:46px;font-size:22px}
+  .mbody{padding:14px 12px;-webkit-overflow-scrolling:touch}
+  .mfoot{padding:12px 14px}
+  .mfoot .lft,.mfoot .rgt{flex:1}
+  .mfoot button{min-height:48px}
+  .selbadge{font-size:12.5px;padding:9px 16px}
+  .clearbtn{font-size:13px;padding:10px 14px;min-height:44px}
+
+  /* --- Excel: dropzone + mapping + bảng --- */
+  .dropzone{min-height:240px;padding:40px 16px}
+  .dropzone .t1{font-size:17px}
+  .dropzone .t2{font-size:14px}
+  .mapcard{padding:14px 12px}
+  .mapgrid{grid-template-columns:1fr 1fr;gap:10px}
+  .mapgrid .mf select{font-size:14px !important;min-height:46px}
+  .savecfg{padding:11px 16px;font-size:13px;min-height:44px}
+  .searchbox{max-width:none}
+  .searchbox input{padding-left:40px}
+  .tscroll{max-height:none;height:auto;flex:1}
+  table.xt{font-size:14px}
+  table.xt thead th{font-size:11px;padding:12px 12px}
+  table.xt tbody td{padding:13px 12px}
+  table.xt input[type=checkbox]{width:26px;height:26px}
+  .dcin{width:88px;padding:10px 6px;font-size:15px !important;min-height:44px}
+  .scrolltip{font-size:11px}
+
+  /* --- Lịch sử --- */
+  .hchead h4{font-size:15px}
+  .hbtns{width:100%}
+  .hbtns .cbtn{flex:1;justify-content:center}
+  .hterm pre{font-size:13px}
+
+  /* --- Toast + lightbox --- */
+  .toast{font-size:14.5px;padding:14px 20px;bottom:90px}
+  .lb img{max-width:100vw;max-height:100dvh;border-radius:0}
+
+  /* --- Màn hình khóa --- */
+  .lockcard{padding:28px 22px;border-radius:16px}
+  .lockcard .go{padding:16px;font-size:15px;min-height:54px}
+}
+
+/* Điện thoại rất nhỏ */
+@media(max-width:400px){
+  .brand h1{font-size:14.5px}
+  .mtab{font-size:14px;padding:13px 4px}
+  .ptab{min-width:100px;font-size:13.5px}
+  .grid{grid-template-columns:1fr 1fr;gap:8px}
+  .mapgrid{grid-template-columns:1fr}
+}
+
+/* Tăng vùng chạm cho mọi nút trên thiết bị cảm ứng */
+@media(pointer:coarse){
+  button{touch-action:manipulation}
+  .tbtn:hover,.cbtn:hover,.tpl:hover,.chip:hover,.sbtn:hover{background:inherit}
+}
+
 </style>
 </head>
 <body>
