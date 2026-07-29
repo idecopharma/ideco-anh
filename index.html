@@ -197,6 +197,33 @@ header.top{background:#fff;border-bottom:1px solid var(--line);padding:12px 20px
 .sbtn{padding:7px 12px;border-radius:8px;border:1px solid var(--line2);background:#fff;font-size:12px;font-weight:700;color:var(--slate7);transition:all .15s}
 .sbtn:hover{background:var(--panel)}
 
+
+/* ===== Packshot builder ===== */
+.pkbox{border:1px solid var(--line2);border-radius:12px;background:#fbfcfe;overflow:hidden;margin-bottom:16px}
+.pkhd{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;background:linear-gradient(90deg,var(--red-soft),#fff);cursor:pointer;border-bottom:1px solid var(--line)}
+.pkhd .t{font-size:13.5px;font-weight:800;color:var(--red-dark);display:flex;align-items:center;gap:7px}
+.pkhd .ar{font-size:11px;color:var(--muted);font-weight:800;transition:transform .2s}
+.pkbody{padding:14px;display:none}
+.pkbox.open .pkbody{display:block}
+.pkbox.open .pkhd .ar{transform:rotate(180deg)}
+.pkg{margin-bottom:12px}
+.pkg .lbl{margin-bottom:6px}
+.pkrow{display:flex;flex-wrap:wrap;gap:7px}
+.pkopt{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--slate7);margin-top:7px}
+.pkopt input{width:18px;height:18px;accent-color:var(--red);flex-shrink:0}
+.pkprev{background:#0f172a;border-radius:10px;padding:12px 13px;margin-top:12px;max-height:150px;overflow:auto}
+.pkprev pre{margin:0;color:#9fe8b4;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.pkbtns{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
+.pkbtns .pkgo{flex:1;min-width:170px;padding:12px;border:none;border-radius:10px;background:linear-gradient(90deg,var(--red),var(--red-dark));color:#fff;font-size:13px;font-weight:800;box-shadow:0 5px 14px rgba(238,58,35,.3)}
+.pkbtns .pkgo:active{transform:scale(.97)}
+@media(max-width:640px){
+  .pkhd{padding:14px}.pkhd .t{font-size:14.5px}
+  .pkbody{padding:14px 12px}
+  .pkrow{gap:8px}.pkbody .chip{padding:9px 14px;font-size:13.5px}
+  .pkopt{font-size:13.5px;margin-top:9px}
+  .pkbtns .pkgo{padding:15px;font-size:14px}
+}
+
 /* ===== Gallery ===== */
 .galhead{display:flex;align-items:center;justify-content:space-between;margin:28px 0 12px}
 .galhead h2{font-size:16px;font-weight:800}
@@ -708,6 +735,40 @@ table.xt input[type=checkbox]{width:19px;height:19px;accent-color:var(--em);curs
           <label class="lbl b">Mô tả ảnh cần tạo</label>
           <textarea id="freePrompt" style="min-height:130px;resize:vertical" placeholder="VD: Poster quảng cáo sản phẩm dược mỹ phẩm, tông đỏ trắng sang trọng, chữ 'IDECO PHARMA' nổi bật, phong cách chuyên nghiệp..."></textarea>
           <div class="chips" id="chips"></div>
+
+        </div>
+
+
+        <!-- ===== PACKSHOT STUDIO ===== -->
+        <div class="pkbox" id="pkBox">
+          <div class="pkhd" id="pkHead">
+            <span class="t">📦 PACKSHOT STUDIO — ảnh sản phẩm chuẩn studio</span>
+            <span class="ar" id="pkArrow">▼</span>
+          </div>
+          <div class="pkbody">
+            <div class="pkg">
+              <label class="lbl b">Tên / mô tả sản phẩm</label>
+              <input type="text" id="pkName" placeholder="VD: hộp thuốc Paracetamol 500mg, hộp giấy đứng">
+            </div>
+            <div class="pkg"><label class="lbl b">Chất liệu bao bì</label><div class="pkrow" id="pkMat"></div></div>
+            <div class="pkg"><label class="lbl b">Góc chụp & bố cục</label><div class="pkrow" id="pkAng"></div></div>
+            <div class="pkg"><label class="lbl b">Ánh sáng studio</label><div class="pkrow" id="pkLig"></div></div>
+            <div class="pkg"><label class="lbl b">Nền</label><div class="pkrow" id="pkBg"></div></div>
+            <div class="pkg">
+              <label class="lbl b">Yêu cầu thêm (tùy chọn)</label>
+              <input type="text" id="pkNote" placeholder="VD: thêm 2 vỉ thuốc đặt nghiêng bên cạnh hộp">
+              <label class="pkopt"><input type="checkbox" id="pkKeep" checked> Giữ nguyên 100% chữ & logo trên bao bì (bắt buộc khi dùng ảnh mẫu)</label>
+              <label class="pkopt"><input type="checkbox" id="pkBanner"> Chừa banner trắng trống phía dưới ảnh để điền thông tin</label>
+              <label class="pkopt"><input type="checkbox" id="pkRaw" checked> Ép chất lượng RAW 16-bit, tương phản & chi tiết cao</label>
+            </div>
+            <div class="pkprev"><pre id="pkPrev"></pre></div>
+            <div class="pkbtns">
+              <button class="pkgo" id="pkApply">⚡ ĐƯA VÀO Ô MÔ TẢ</button>
+              <button class="sbtn" id="pkCopy">📋 Copy</button>
+              <button class="sbtn" id="pkReset">↻ Mặc định</button>
+            </div>
+            <div class="hint" style="margin-top:9px">💡 Dùng kèm chế độ <b>Sửa từ ảnh mẫu</b> + ảnh hộp thuốc thật sẽ cho packshot giữ nguyên chữ, đẹp như chụp studio.</div>
+          </div>
         </div>
 
         <div class="block row2">
@@ -2083,8 +2144,142 @@ $('chips').querySelectorAll('.chip').forEach(c => c.onclick = () => {
   $('chips').querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
   c.classList.add('on');
   $('freePrompt').value = CHIPS[+c.dataset.i][1];
+
   $('freePrompt').focus();
+
 });
+
+
+/* ============================================================
+   PACKSHOT STUDIO — dựng prompt ảnh sản phẩm chuẩn studio
+============================================================ */
+const PK_CAM = 'CAMERA: shot on a Phase One IQ4 150MP medium format back, 120mm macro lens, f/11, ISO 50, '
+  + 'locked tripod, focus stacking for edge-to-edge razor sharpness, zero lens distortion, no perspective warp.';
+
+const PK_RAW = 'RENDER: RAW photo quality, 16-bit color depth, ultra-detailed micro-texture on the packaging surface, '
+  + 'crisp perfectly legible printed text, accurate color science, neutral white balance 5500K, '
+  + 'high dynamic range with rich contrast — no blown highlights, no crushed blacks — '
+  + 'commercial e-commerce grade, pharmacy catalog standard, photorealistic, maximum resolution.';
+
+const PK_MATS = {
+  paper:  ['Hộp giấy mờ',  'matte coated carton box with fine paper grain and crisp folded edges'],
+  gloss:  ['Nhựa bóng',    'glossy plastic surface with controlled elongated specular highlights'],
+  glass:  ['Chai thủy tinh','transparent glass bottle with refractive edge highlights and clean internal reflections'],
+  metal:  ['Tuýp nhôm',    'brushed aluminium tube with soft anisotropic metallic sheen'],
+  foil:   ['Vỉ bấm foil',  'aluminium blister foil with reflective metallic backing and embossed tablet pockets'],
+  sachet: ['Gói / túi',    'flexible laminated sachet with soft natural creases and a satin finish'],
+  pump:   ['Chai bơm mỹ phẩm','cosmetic pump bottle with smooth soft-touch finish and a polished cap']
+};
+const PK_ANGS = {
+  hero:  ['Góc 3/4 hero', 'three-quarter hero angle slightly above eye level, showing the front and side faces of the package'],
+  front: ['Chính diện',   'straight-on eye-level front view, label facing the camera, perfectly centered'],
+  top:   ['Từ trên xuống','top-down flat lay view, product perfectly aligned to the frame'],
+  group: ['Nhóm sản phẩm','product group arrangement, the box standing behind and the primary unit in front, overlapping composition'],
+  macro: ['Cận cảnh lớn', 'tight close-up macro composition, the product filling most of the frame, dramatic scale']
+};
+const PK_LIGS = {
+  classic: ['Studio 3 điểm', 'LIGHTING: classic three-point studio setup — a large octabox key light at 45° camera left, '
+    + 'a white bounce fill card camera right, and a narrow strip softbox rim light from behind separating the edges from the background; '
+    + 'controlled specular highlights, soft gradient falloff, deep but fully detailed shadows.'],
+  highkey: ['High-key sạch', 'LIGHTING: high-key setup — two large softboxes on both sides plus overhead diffusion, '
+    + 'flat even illumination, virtually shadowless, bright airy catalog look with clean edge definition.'],
+  luxury:  ['Cao cấp', 'LIGHTING: a single large softbox top-front with black flags on both sides, dramatic side falloff, '
+    + 'elegant gradient across the packaging, luxury cosmetic mood, refined specular roll-off.'],
+  hard:    ['Tương phản mạnh', 'LIGHTING: hard light from a bare strobe with a honeycomb grid, sharply defined directional shadow, '
+    + 'high contrast editorial product shot, punchy micro-contrast on the surface texture.'],
+  dual:    ['Viền màu hiện đại', 'LIGHTING: dual gel setup — a soft neutral key light plus a subtle colored rim light on the opposite edge, '
+    + 'modern gradient separation, controlled contrast, contemporary advertising look.']
+};
+const PK_BGS = {
+  white:  ['Trắng seamless', 'BACKGROUND: seamless pure white #FFFFFF studio sweep with a subtle natural contact shadow anchoring the product.'],
+  grey:   ['Xám gradient',   'BACKGROUND: soft neutral grey gradient sweep, darker toward the corners, with a soft grounded shadow beneath the product.'],
+  black:  ['Đen bóng',       'BACKGROUND: glossy black acrylic surface with a clean mirrored reflection under the product, deep black seamless backdrop.'],
+  marble: ['Đá cẩm thạch',   'BACKGROUND: polished white marble surface with soft natural reflection, light neutral backdrop, premium pharmacy display feel.'],
+  red:    ['Đỏ IDECO',       'BACKGROUND: smooth seamless backdrop in the brand red #ee3a23 fading to white, elegant sweep, gentle contact shadow.'],
+  nature: ['Nền dược liệu',  'BACKGROUND: clean light backdrop softly decorated with a few fresh herbal leaves and dried medicinal plants out of focus, natural pharmacy mood.']
+};
+
+const PK_DEF = { mat:'paper', ang:'hero', lig:'classic', bg:'white' };
+let pkSel = Object.assign({}, PK_DEF);
+const PK_LS = 'PKSHOT_IDECO_V1';
+
+function pkFill(boxId, dict, key){
+  $(boxId).innerHTML = Object.keys(dict).map(k =>
+    `<span class="chip${pkSel[key]===k?' on':''}" data-k="${k}">${dict[k][0]}</span>`).join('');
+  $(boxId).querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    pkSel[key] = c.dataset.k;
+    $(boxId).querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x === c));
+    pkBuild(); pkSave();
+  });
+}
+function pkRenderAll(){
+  pkFill('pkMat', PK_MATS, 'mat');
+  pkFill('pkAng', PK_ANGS, 'ang');
+  pkFill('pkLig', PK_LIGS, 'lig');
+  pkFill('pkBg',  PK_BGS,  'bg');
+}
+
+function pkBuild(){
+  const name = ($('pkName').value || '').trim() || 'the product package';
+  const note = ($('pkNote').value || '').trim();
+  const ar   = $('freeAspect').value;
+  let p = `Professional studio packshot photography of ${name}, ${PK_MATS[pkSel.mat][1]}, ${PK_ANGS[pkSel.ang][1]}.`;
+  p += `\n\n${PK_CAM}`;
+  p += `\n\n${PK_LIGS[pkSel.lig][1]}`;
+  p += `\n\n${PK_BGS[pkSel.bg][1]}`;
+  if($('pkRaw').checked) p += `\n\n${PK_RAW}`;
+  if(ar && ar !== 'auto') p += ` Aspect ratio ${ar}.`;
+  if(freeMode === 'i2i') p += `\n\nRecreate the product exactly as it appears in the attached reference image — same shape, same colors, same artwork and same printed text.`;
+  if($('pkKeep').checked) p += `\n\nPreserve the original packaging design exactly: do not alter, translate, redraw or invent any text, logo or symbol on the package. No extra text anywhere in the image.`;
+  if($('pkBanner').checked) p += `\n\nLeave an empty clean white horizontal banner strip across the bottom of the image, full width, with no text on it, reserved for information to be added later.`;
+  if(note) p += `\n\nAdditional direction: ${note}.`;
+  $('pkPrev').textContent = p;
+  return p;
+}
+function pkSave(){
+  try{ localStorage.setItem(PK_LS, JSON.stringify({ s:pkSel, n:$('pkName').value, t:$('pkNote').value })); }catch(e){}
+}
+function pkLoad(){
+  try{
+    const d = JSON.parse(localStorage.getItem(PK_LS) || 'null');
+    if(!d) return;
+    if(d.s) Object.keys(pkSel).forEach(k => { if(d.s[k]) pkSel[k] = d.s[k]; });
+    $('pkName').value = d.n || ''; $('pkNote').value = d.t || '';
+  }catch(e){}
+}
+
+$('pkHead').onclick = () => $('pkBox').classList.toggle('open');
+['pkName','pkNote'].forEach(id => $(id).addEventListener('input', () => { pkBuild(); pkSave(); }));
+['pkKeep','pkBanner','pkRaw'].forEach(id => $(id).addEventListener('change', pkBuild));
+$('freeAspect').addEventListener('change', pkBuild);
+
+$('pkApply').onclick = () => {
+  const p = pkBuild();
+  $('freePrompt').value = p;
+  $('chips').querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+  toast('Đã đưa prompt Packshot vào ô mô tả ✓');
+  $('freePrompt').scrollIntoView({ behavior:'smooth', block:'center' });
+};
+$('pkCopy').onclick = async () => {
+  const p = pkBuild();
+  try{ await navigator.clipboard.writeText(p); toast('Đã copy prompt ✓'); }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = p; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); toast('Đã copy prompt ✓'); }catch(_){ toast('Không copy được', true); }
+    document.body.removeChild(ta);
+  }
+};
+$('pkReset').onclick = () => {
+  pkSel = Object.assign({}, PK_DEF);
+  $('pkName').value = ''; $('pkNote').value = '';
+  $('pkKeep').checked = true; $('pkRaw').checked = true; $('pkBanner').checked = false;
+  pkRenderAll(); pkBuild(); pkSave();
+  toast('Đã đặt lại mặc định');
+};
+
+pkLoad(); pkRenderAll(); pkBuild();
 
 $('modeT2I').onclick = () => setFreeMode('t2i');
 $('modeI2I').onclick = () => setFreeMode('i2i');
@@ -2093,6 +2288,7 @@ function setFreeMode(m){
   $('modeT2I').classList.toggle('on', m === 't2i');
   $('modeI2I').classList.toggle('on', m === 'i2i');
   $('refBox').style.display = m === 'i2i' ? 'block' : 'none';
+  if(typeof pkBuild === 'function' && document.getElementById('pkPrev')) pkBuild();
 }
 
 $('btnRefUpload').onclick = () => $('refFile').click();
